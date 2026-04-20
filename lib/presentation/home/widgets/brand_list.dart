@@ -5,11 +5,18 @@ class BrandList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final brands = ['Nike', 'Adidas', 'Reebok', 'Puma', 'Bata'];
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    final List<Map<String, String>> brands = [
+      {'name': 'Nike', 'image': 'assets/images/logo-nike.png'},
+      {'name': 'Adidas', 'image': 'assets/images/logo-addidas.png'}, 
+      {'name': 'Reebok', 'image': 'assets/images/logo-reebok.png'},
+      {'name': 'Puma', 'image': 'assets/images/logo-puma.png'},
+      {'name': 'Bata', 'image': 'assets/images/logo-bata.png'},
+    ];
+
     return SizedBox(
-      height: 90,
+      height: 100, 
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: brands.length,
@@ -19,16 +26,32 @@ class BrandList extends StatelessWidget {
             child: Column(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  width: 60, 
+                  height: 60, 
+                  padding: const EdgeInsets.all(14), 
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: isDark ? Colors.grey.shade800 : Colors.grey.shade300),
-                    color: isDark ? const Color(0xFF2A2D3A) : Colors.white,
+                    // Garis tepi disesuaikan di mode malam agar lingkarannya menonjol
+                    border: Border.all(color: isDark ? Colors.grey.shade700 : Colors.grey.shade300),
+                    // KUNCI: Selalu gunakan warna putih untuk background lingkaran
+                    color: Colors.white, 
                   ),
-                  child: Icon(Icons.sports_esports, color: isDark ? Colors.white70 : Colors.black54),
+                  child: Image.asset(
+                    brands[index]['image']!,
+                    fit: BoxFit.contain, 
+                    // Karena background lingkarannya putih, biarkan logo brand aslinya 
+                    // (yang berwarna hitam) tampil apa adanya tanpa diubah warnanya.
+                  ),
                 ),
                 const SizedBox(height: 8),
-                Text(brands[index], style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.onSurface)),
+                Text(
+                  brands[index]['name']!, 
+                  style: TextStyle(
+                    fontSize: 12, 
+                    fontWeight: FontWeight.w500, 
+                    color: Theme.of(context).colorScheme.onSurface
+                  )
+                ),
               ],
             ),
           );

@@ -49,10 +49,10 @@ class _HomePageState extends State<HomePage> {
               child: _buildSearchBar(context, isDark),
             ),
             const SizedBox(height: 10),
-            
+
             // PromoBanner dipanggil full-width tanpa padding
             const PromoBanner(),
-            
+
             const SizedBox(height: 24),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -63,7 +63,14 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(height: 16),
                   const BrandList(),
                   const SizedBox(height: 24),
-                  Text('New Arrival', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface)),
+                  Text(
+                    'New Arrival',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                  ),
                   const SizedBox(height: 16),
                   _buildCategories(context, isDark),
                   const SizedBox(height: 16),
@@ -81,22 +88,52 @@ class _HomePageState extends State<HomePage> {
     return Row(
       children: [
         Expanded(
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              border: Border.all(color: isDark ? Colors.grey.shade800 : Colors.grey.shade300),
-              borderRadius: BorderRadius.circular(12),
-              color: isDark ? const Color(0xFF2A2D3A) : Colors.white,
+          child: SizedBox(
+            height: 50,
+            child: TextField(
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontSize:
+                    16, // Ukuran teks saat mengetik diperbesar menjadi ideal
+                fontFamily: 'Jost',
+              ),
+              decoration: InputDecoration(
+                hintText: 'Search Product',
+                hintStyle: TextStyle(
+                  color: Colors.grey.shade500,
+                  fontSize: 16, // Ukuran teks placeholder diperbesar
+                  fontFamily: 'Jost',
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 0,
+                ),
+                filled: true,
+                fillColor: isDark ? const Color(0xFF2A2D3A) : Colors.white,
+
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: isDark ? Colors.white54 : Colors.black,
+                  ),
+                ),
+              ),
             ),
-            child: Text('Search Product', style: TextStyle(color: Colors.grey.shade500)),
           ),
         ),
         const SizedBox(width: 12),
         Container(
-          padding: const EdgeInsets.all(12),
+          height: 50,
+          width: 50,
           decoration: BoxDecoration(
-            color: isDark ? Colors.white : Colors.black, 
-            borderRadius: BorderRadius.circular(12)
+            color: isDark ? Colors.white : Colors.black,
+            borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(Icons.tune, color: isDark ? Colors.black : Colors.white),
         ),
@@ -108,8 +145,22 @@ class _HomePageState extends State<HomePage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface)),
-        Text(action, style: TextStyle(fontSize: 14, decoration: TextDecoration.underline, color: Theme.of(context).colorScheme.onSurface)),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+        ),
+        Text(
+          action,
+          style: TextStyle(
+            fontSize: 14,
+            decoration: TextDecoration.underline,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+        ),
       ],
     );
   }
@@ -127,13 +178,20 @@ class _HomePageState extends State<HomePage> {
             margin: const EdgeInsets.only(right: 10),
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             decoration: BoxDecoration(
-              color: isActive ? (isDark ? Colors.white : Colors.black) : (isDark ? const Color(0xFF2A2D3A) : Colors.grey.shade100),
+              color: isActive
+                  ? (isDark ? Colors.white : Colors.black)
+                  : (isDark ? const Color(0xFF2A2D3A) : Colors.grey.shade100),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Center(
               child: Text(
-                cats[index], 
-                style: TextStyle(color: isActive ? (isDark ? Colors.black : Colors.white) : (isDark ? Colors.white70 : Colors.black), fontWeight: FontWeight.w500)
+                cats[index],
+                style: TextStyle(
+                  color: isActive
+                      ? (isDark ? Colors.black : Colors.white)
+                      : (isDark ? Colors.white70 : Colors.black),
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           );

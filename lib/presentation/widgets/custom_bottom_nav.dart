@@ -5,45 +5,48 @@ class CustomBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 15),
       decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        border: Border(top: BorderSide(color: isDark ? Colors.white10 : Colors.grey.shade200)),
+        color: Colors.white, // Frame dibuat konsisten selalu putih
+        border: Border(top: BorderSide(color: Colors.grey.shade200)), // Garis batas atas yang tipis
       ),
       child: SafeArea(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildNavItem(context, Icons.home_filled, isActive: true),
-            _buildNavItem(context, Icons.favorite_border),
-            _buildNavItem(context, Icons.shopping_cart_outlined),
-            _buildNavItem(context, Icons.receipt_long_outlined),
-            _buildNavItem(context, Icons.person_outline),
+            _buildNavItem(context, 'assets/images/nav-home.png', isActive: true),
+            _buildNavItem(context, 'assets/images/nav-wishlist.png'),
+            _buildNavItem(context, 'assets/images/nav-mycart.png'),
+            _buildNavItem(context, 'assets/images/nav-category.png'),
+            _buildNavItem(context, 'assets/images/nav-profile.png'),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildNavItem(BuildContext context, IconData icon, {bool isActive = false}) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final activeColor = Theme.of(context).colorScheme.onSurface;
-    final inactiveColor = isDark ? Colors.grey.shade600 : Colors.grey;
-
+  Widget _buildNavItem(BuildContext context, String imagePath, {bool isActive = false}) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, color: isActive ? activeColor : inactiveColor, size: 28),
+        Image.asset(
+          imagePath,
+          width: 24,  
+          height: 24,
+          // Icon akan selalu tampil solid hitam penuh (100% opacity), 
+          // tidak peduli sedang diklik atau tidak.
+          color: Colors.black, 
+        ),
+        
+        // Garis indikator ini yang sekarang menjadi satu-satunya penanda menu aktif
         if (isActive)
           Container(
-            margin: const EdgeInsets.only(top: 4),
+            margin: const EdgeInsets.only(top: 6),
             height: 3,
             width: 20,
             decoration: BoxDecoration(
-              color: activeColor,
+              color: Colors.black, 
               borderRadius: BorderRadius.circular(2),
             ),
           )

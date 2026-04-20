@@ -87,10 +87,21 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+  assets:
+    - assets/images/
+
   fonts:
     - family: Jost
       fonts:
         - asset: assets/fonts/Jost-Regular.ttf
+          weight: 400  # Regular
+        - asset: assets/fonts/Jost-Medium.ttf
+          weight: 500  # Medium
         - asset: assets/fonts/Jost-Bold.ttf
-          weight: 700
+          weight: 700  # Bold
+
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Medium.ttf
+          weight: 500
 
