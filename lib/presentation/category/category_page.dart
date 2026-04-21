@@ -70,10 +70,11 @@ class _CategoryPageState extends State<CategoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? const Color(0xFF222431) : Colors.white,      
 
-      appBar: _buildAppBar(),
+      appBar: _buildAppBar(isDark),
 
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -101,10 +102,9 @@ class _CategoryPageState extends State<CategoryPage> {
     );
   }
 
-  PreferredSizeWidget _buildAppBar() {
+  PreferredSizeWidget _buildAppBar(bool isDark) {
     return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
+      backgroundColor: isDark ? const Color(0xFF222431) : Colors.white,      elevation: 0,
       centerTitle: true,
       leadingWidth: 52, // Sudah sama
       leading: MouseRegion(
@@ -113,7 +113,9 @@ class _CategoryPageState extends State<CategoryPage> {
           // Margin disamakan ke 16 agar sejajar dengan cart_screen
           margin: const EdgeInsets.only(left: 16, top: 10, bottom: 10),
           decoration: BoxDecoration(
-            color: const Color(0xFFF3F3F3),
+            color: isDark
+              ? const Color(0xFF2A2D3A)
+              : const Color(0xFFF3F3F3),
             borderRadius: BorderRadius.circular(10),
           ),
           child: IconButton(
@@ -131,22 +133,22 @@ class _CategoryPageState extends State<CategoryPage> {
               splashFactory: NoSplash.splashFactory,
             ),
             padding: EdgeInsets.zero,
-            icon: const Icon(
+            icon: Icon(
               Icons.arrow_back_ios_new,
-              color: Colors.black,
+              color: isDark ? Colors.white : Colors.black,
               size: 18,
             ),
           ),
         ),
       ),
-      title: const Text(
+      title: Text(
         "Category",
         style: TextStyle(
           fontFamily: 'Jost',
           fontSize: 22,
           fontWeight: FontWeight
               .w700, // Kamu bisa sesuaikan w500/w700 agar konsisten dengan cart
-          color: Colors.black,
+          color: isDark ? Colors.white : Colors.black,        
         ),
       ),
       actions: [
@@ -154,20 +156,22 @@ class _CategoryPageState extends State<CategoryPage> {
           padding: const EdgeInsets.only(
             right: 16,
           ), // Disamakan ke 16 agar simetris dengan leading
-          child: _iconBox(Icons.search),
+          child: _iconBox(Icons.search, isDark),
         ),
       ],
     );
   }
 
-  Widget _iconBox(IconData icon) {
+  Widget _iconBox(IconData icon, bool isDark) {
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Container(
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-          color: softColor,
+          color: isDark
+            ? const Color(0xFF2A2D3A)
+            : softColor,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Icon(icon, size: 18, color: Colors.black),
@@ -221,9 +225,14 @@ class _CategoryPageState extends State<CategoryPage> {
                     height: 72,
                     padding: const EdgeInsets.all(18),
                     decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.black12),
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white24
+                          : Colors.black12,
                     ),
+                  ),
                     child: Image.asset(item["image"]!),
                   ),
                   const SizedBox(height: 8),
@@ -282,7 +291,9 @@ class _CategoryPageState extends State<CategoryPage> {
           onTap: openProductPage,
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.grey.shade100,
+              color: Theme.of(context).brightness == Brightness.dark
+                ? const Color(0xFF2A2D3A)
+                : Colors.grey.shade100,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(

@@ -12,15 +12,35 @@ class ProductActionSheet {
     required VoidCallback onSortTap,
     required VoidCallback onFilterTap,
   }) {
+    return Builder(
+  builder: (context) {
+    final isDark =
+        Theme.of(context).brightness ==
+            Brightness.dark;
+
     return Container(
       height: 58,
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      decoration: BoxDecoration(
+        color: isDark
+            ? const Color(0xFF2B2E3D)
+            : Colors.white,
+        borderRadius: const BorderRadius.vertical(
+          top: Radius.circular(18),
+        ),
         border: Border(
           top: BorderSide(
-            color: Colors.black12,
+            color: isDark
+                ? Colors.white10
+                : Colors.black12,
           ),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.35),
+            blurRadius: 18,
+            offset: const Offset(0, -4),
+          ),
+        ],
       ),
       child: Row(
         children: [
@@ -29,15 +49,15 @@ class ProductActionSheet {
             text: "GENDER",
             onTap: onGenderTap,
           ),
-          // Garis Pemisah 1
-          _divider(),
+          _divider(isDark),
+
           _BottomMenuBtn(
             icon: "assets/icon/sort.svg",
             text: "SORT",
             onTap: onSortTap,
           ),
-          // Garis Pemisah 2
-          _divider(),
+          _divider(isDark),
+
           _BottomMenuBtn(
             icon: "assets/icon/filter.svg",
             text: "FILTER",
@@ -46,10 +66,12 @@ class ProductActionSheet {
         ],
       ),
     );
+  },
+);
   }
 
   /// Widget pembantu untuk garis pemisah vertikal
-  static Widget _divider() {
+  static Widget _divider(bool isDark) {
     return Container(
       height: 24, // Tinggi garis agar tidak menyentuh atas-bawah
       width: 1,
