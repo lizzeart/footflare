@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'presentation/home/home_page.dart';
+// --- TAMBAHKAN IMPORT INI ---
+import 'presentation/main_screen.dart'; 
 
 // Variabel global untuk mengatur tema
 final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
@@ -42,7 +44,7 @@ class FootFlareApp extends StatelessWidget {
           // --- PENGATURAN MODE MALAM ---
           darkTheme: ThemeData(
             fontFamily: 'Jost',
-            scaffoldBackgroundColor: const Color(0xFF1B1D27), // Warna background gelap khusus
+            scaffoldBackgroundColor: const Color(0xFF1B1D27), 
             colorScheme: const ColorScheme.dark(
               primary: Colors.white,
               surface: Color(0xFF2A2D3A), 
@@ -57,7 +59,8 @@ class FootFlareApp extends StatelessWidget {
             drawerTheme: const DrawerThemeData(backgroundColor: Color(0xFF1B1D27)),
           ),
           
-          home: const HomePage(),
+          // Mengarahkan ke MainScreen agar Navbar muncul
+          home: const MainScreen(),
         );
       },
     );

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../widgets/custom_bottom_nav.dart';
 import '../widgets/app_install_popup.dart';
 import 'widgets/home_app_bar.dart';
 import 'widgets/side_drawer.dart';
@@ -39,7 +38,6 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       drawer: const SideDrawer(),
       appBar: const HomeAppBar(),
-      bottomNavigationBar: const CustomBottomNav(),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

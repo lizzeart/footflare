@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 
 class CustomBottomNav extends StatelessWidget {
-  const CustomBottomNav({super.key});
+  final int currentIndex;
+  final Function(int) onTap;
+
+  const CustomBottomNav({
+    super.key,
+    required this.currentIndex,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,42 +22,46 @@ class CustomBottomNav extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildNavItem(context, 'assets/images/nav-home.png', isActive: true),
-            _buildNavItem(context, 'assets/images/nav-wishlist.png'),
-            _buildNavItem(context, 'assets/images/nav-mycart.png'),
-            _buildNavItem(context, 'assets/images/nav-category.png'),
-            _buildNavItem(context, 'assets/images/nav-profile.png'),
+            _buildNavItem(0, 'assets/images/nav-home.png'),
+            _buildNavItem(1, 'assets/images/nav-wishlist.png'),
+            _buildNavItem(2, 'assets/images/nav-mycart.png'),
+            _buildNavItem(3, 'assets/images/nav-category.png'),
+            _buildNavItem(4, 'assets/images/nav-profile.png'),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildNavItem(BuildContext context, String imagePath, {bool isActive = false}) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Image.asset(
-          imagePath,
-          width: 24,  
-          height: 24,
-          // Icon akan selalu tampil solid hitam penuh (100% opacity), 
-          // tidak peduli sedang diklik atau tidak.
-          color: Colors.black, 
-        ),
-        
-        // Garis indikator ini yang sekarang menjadi satu-satunya penanda menu aktif
-        if (isActive)
-          Container(
-            margin: const EdgeInsets.only(top: 6),
-            height: 3,
-            width: 20,
-            decoration: BoxDecoration(
-              color: Colors.black, 
-              borderRadius: BorderRadius.circular(2),
-            ),
-          )
-      ],
+  Widget _buildNavItem(int index, String imagePath) {
+    final isActive = currentIndex == index;
+    return GestureDetector(
+      onTap: () => onTap(index),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image.asset(
+            imagePath,
+            width: 24,
+            height: 24,
+            // Icon akan selalu tampil solid hitam penuh (100% opacity),
+            // tidak peduli sedang diklik atau tidak.
+            color: Colors.black,
+          ),
+
+          // Garis indikator ini yang sekarang menjadi satu-satunya penanda menu aktif
+          if (isActive)
+            Container(
+              margin: const EdgeInsets.only(top: 6),
+              height: 3,
+              width: 20,
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            )
+        ],
+      ),
     );
   }
 }
