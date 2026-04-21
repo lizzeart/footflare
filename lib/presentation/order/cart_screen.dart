@@ -87,14 +87,16 @@ class _CartScreenState extends State<CartScreen> {
             ),
             child: IconButton(
               onPressed: () {
-                // Fungsi ini akan pindah ke MainScreen dan menghapus semua halaman sebelumnya
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => const MainScreen()),
-                  (route) =>
-                      false, // Ini yang tadi kita bahas untuk hapus semua stack
-                );
-              },
+                  MaterialPageRoute(
+                    builder: (context) => const MainScreen(
+                      initialIndex: 0,
+                    ),
+                  ),
+                  (route) => false,
+                );                
+              },              
               style: ButtonStyle(
                 overlayColor: WidgetStateProperty.all(Colors.transparent),
                 splashFactory: NoSplash.splashFactory,
