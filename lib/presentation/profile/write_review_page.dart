@@ -17,7 +17,7 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
   final Map<String, dynamic> productData = {
     "name": "Echo Vibe Urban Runners",
     "price": "\$179",
-    "image": "assets/images/shoe1.png", 
+    "image": "assets/images/pic1.png", 
   };
 
   @override
