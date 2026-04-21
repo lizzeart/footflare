@@ -157,7 +157,7 @@ class _FootFlareProfileState extends State<FootFlareProfile> {
                           item: {
                             'name': 'Swift Glide Sprinter Soles',
                             'price': '199',
-                            'image': 'assets/images/shoe1.png',
+                            'image': 'assets/images/pic1.png',
                           },
                         ),
                       ),
