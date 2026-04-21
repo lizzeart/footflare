@@ -26,15 +26,27 @@ class _WishlistPageState extends State<WishlistPage> {
 
   @override
   Widget build(BuildContext context) {
+    // 1. Deteksi tema aktif (Dark/Light) dari context
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    // Filter produk
     List<Product> wishlistItems = products.where((p) => p.isWishlist).toList();
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      // 2. Gunakan warna dari ThemeMode, bukan Colors.white manual
+      backgroundColor: colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: colorScheme.surface,
         elevation: 0,
         leading: _buildHeaderIcon(Icons.arrow_back_ios_new, () => Navigator.pop(context), size: 16),
-        title: const Text("Wishlist", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        title: Text(
+          "Wishlist",
+          style: TextStyle(
+            color: colorScheme.onSurface, // Otomatis Putih di Dark, Hitam di Light
+            fontWeight: FontWeight.bold
+          ),
+        ),
         centerTitle: true,
         actions: [
           _buildHeaderIcon(Icons.search, () {
@@ -45,10 +57,12 @@ class _WishlistPageState extends State<WishlistPage> {
       ),
       body: Column(
         children: [
-          _buildCategoryBar(),
+          // Kirim data tema ke bar kategori
+          _buildCategoryBar(isDark, colorScheme),
+
           Expanded(
-            child: wishlistItems.isEmpty 
-            ? const Center(child: Text("Wishlist kamu kosong"))
+            child: wishlistItems.isEmpty
+            ? Center(child: Text("Wishlist kamu kosong", style: TextStyle(color: colorScheme.onSurface)))
             : GridView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -65,7 +79,7 @@ class _WishlistPageState extends State<WishlistPage> {
                     image: product.image,
                     price: product.price,
                     discount: product.discount,
-                    discountBg: product.discountColor ?? Colors.black, 
+                    discountBg: product.discountColor ?? Colors.black,
                     onRemove: () => setState(() => product.isWishlist = false),
                     onTap: () => debugPrint("Navigasi ke detail: ${product.name}"),
                   );
@@ -77,42 +91,61 @@ class _WishlistPageState extends State<WishlistPage> {
     );
   }
 
-  Widget _buildHeaderIcon(IconData icon, VoidCallback onTap, {double size = 20}) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        decoration: BoxDecoration(color: const Color(0xFFF7F7F7), borderRadius: BorderRadius.circular(8)),
-        child: IconButton(icon: Icon(icon, color: Colors.black, size: size), onPressed: onTap),
+// Update Helper Header Icon agar background-nya tidak mencolok saat gelap
+Widget _buildHeaderIcon(IconData icon, VoidCallback onTap, {double size = 20}) {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Container(
+      decoration: BoxDecoration(
+        // Menyesuaikan background tombol ikon
+        color: isDark ? Colors.white.withValues(alpha: 0.1) : const Color(0xFFF7F7F7),
+        borderRadius: BorderRadius.circular(8),
       ),
-    );
-  }
+      child: IconButton(
+        icon: Icon(icon, color: Theme.of(context).colorScheme.onSurface, size: size),
+        onPressed: onTap,
+      ),
+    ),
+  );
+}
 
-  Widget _buildCategoryBar() {
-    return Container(
-      height: 60,
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        itemCount: categories.length,
-        itemBuilder: (context, index) {
-          bool isSelected = selectedCategory == categories[index];
-          return GestureDetector(
-            onTap: () => setState(() => selectedCategory = categories[index]),
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              decoration: BoxDecoration(
-                color: isSelected ? Colors.black : const Color(0xFFF2F2F2),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: Text(categories[index], style: TextStyle(color: isSelected ? Colors.white : Colors.black, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
+// Update Category Bar agar warna tombol tidak aktif tidak 'mati' saat gelap
+Widget _buildCategoryBar(bool isDark, ColorScheme colorScheme) {
+  return Container(
+    height: 60,
+    margin: const EdgeInsets.symmetric(vertical: 5),
+    child: ListView.builder(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      itemCount: categories.length,
+      itemBuilder: (context, index) {
+        bool isSelected = selectedCategory == categories[index];
+        return GestureDetector(
+          onTap: () => setState(() => selectedCategory = categories[index]),
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 25),
+            decoration: BoxDecoration(
+              // Warna tombol aktif mengikuti Primary Theme
+              color: isSelected ? colorScheme.primary : (isDark ? Colors.white10 : const Color(0xFFF2F2F2)),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Center(
+              child: Text(
+                categories[index],
+                style: TextStyle(
+                  color: isSelected
+                    ? (isDark ? Colors.black : Colors.white)
+                    : colorScheme.onSurface,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                ),
               ),
             ),
-          );
-        },
-      ),
-    );
-  }
+          ),
+        );
+      },
+    ),
+  );
+}
 }
