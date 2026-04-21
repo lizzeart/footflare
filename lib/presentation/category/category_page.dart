@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-
+import '../main_screen.dart';
 import 'product_page.dart';
-import '../widgets/custom_bottom_nav.dart';
 
 class CategoryPage extends StatefulWidget {
   const CategoryPage({super.key});
@@ -107,19 +106,54 @@ class _CategoryPageState extends State<CategoryPage> {
       backgroundColor: Colors.white,
       elevation: 0,
       centerTitle: true,
-      leading: _iconBox(Icons.arrow_back_ios_new),
+      leadingWidth: 52, // Sudah sama
+      leading: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Container(
+          // Margin disamakan ke 16 agar sejajar dengan cart_screen
+          margin: const EdgeInsets.only(left: 16, top: 10, bottom: 10),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF3F3F3),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: IconButton(
+            onPressed: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MainScreen(initialIndex: 0),
+                ),
+                (route) => false,
+              );
+            },
+            style: ButtonStyle(
+              overlayColor: WidgetStateProperty.all(Colors.transparent),
+              splashFactory: NoSplash.splashFactory,
+            ),
+            padding: EdgeInsets.zero,
+            icon: const Icon(
+              Icons.arrow_back_ios_new,
+              color: Colors.black,
+              size: 18,
+            ),
+          ),
+        ),
+      ),
       title: const Text(
         "Category",
         style: TextStyle(
           fontFamily: 'Jost',
           fontSize: 22,
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight
+              .w700, // Kamu bisa sesuaikan w500/w700 agar konsisten dengan cart
           color: Colors.black,
         ),
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 12),
+          padding: const EdgeInsets.only(
+            right: 16,
+          ), // Disamakan ke 16 agar simetris dengan leading
           child: _iconBox(Icons.search),
         ),
       ],
@@ -282,7 +316,7 @@ class _CategoryPageState extends State<CategoryPage> {
                       ),
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -294,10 +328,7 @@ class _CategoryPageState extends State<CategoryPage> {
   Widget _scrollConfig(Widget child) {
     return ScrollConfiguration(
       behavior: const MaterialScrollBehavior().copyWith(
-        dragDevices: {
-          PointerDeviceKind.touch,
-          PointerDeviceKind.mouse,
-        },
+        dragDevices: {PointerDeviceKind.touch, PointerDeviceKind.mouse},
       ),
       child: child,
     );

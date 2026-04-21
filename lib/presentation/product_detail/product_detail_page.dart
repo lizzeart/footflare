@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import '../order/cart_screen.dart';
+import '../main_screen.dart'; // PASTIKAN IMPORT INI ADA
 
 class ProductDetailPage extends StatefulWidget {
   final Map<String, dynamic> product;
 
-  const ProductDetailPage({
-    super.key,
-    required this.product,
-  });
+  const ProductDetailPage({super.key, required this.product});
 
   @override
   State<ProductDetailPage> createState() => _ProductDetailPageState();
@@ -20,15 +18,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
   bool isFavorite = false;
 
-  final List<String> _sizes = [
-    '6.5',
-    '7',
-    '7.5',
-    '8',
-    '8.5',
-    '9',
-    '9.5',
-  ];
+  final List<String> _sizes = ['6.5', '7', '7.5', '8', '8.5', '9', '9.5'];
 
   final List<Color> _colors = [
     Colors.transparent,
@@ -61,11 +51,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 color: Colors.grey.shade100,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(
-                Icons.arrow_back_ios_new,
-                size: 16,
-                color: iconColor,
-              ),
+              child: Icon(Icons.arrow_back_ios_new, size: 16, color: iconColor),
             ),
           ),
         ),
@@ -87,9 +73,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => CartScreen(),
-                  ),
+                  MaterialPageRoute(builder: (_) => CartScreen()),
                 );
               },
               child: Container(
@@ -109,7 +93,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           ),
           const SizedBox(width: 8),
         ],
-
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -119,8 +102,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     widget.product['name'],
@@ -134,9 +116,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
                   const Text(
                     "Items Size:",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.w600),
                   ),
 
                   const SizedBox(height: 10),
@@ -144,77 +124,50 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   Wrap(
                     spacing: 10,
                     runSpacing: 10,
-                    children: List.generate(
-                      _sizes.length,
-                      (index) {
-                        final selected =
-                            _selectedSizeIndex ==
-                                index;
+                    children: List.generate(_sizes.length, (index) {
+                      final selected = _selectedSizeIndex == index;
 
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _selectedSizeIndex =
-                                  index;
-                            });
-                          },
-                          child: AnimatedContainer(
-                            duration:
-                                const Duration(
-                                    milliseconds:
-                                        200),
-                            width: 45,
-                            height: 45,
-                            alignment:
-                                Alignment.center,
-                            decoration:
-                                BoxDecoration(
-                              color: selected
-                                  ? Colors.black
-                                  : Colors.grey
-                                      .shade200,
-                              borderRadius:
-                                  BorderRadius
-                                      .circular(
-                                          8),
-                            ),
-                            child: Text(
-                              _sizes[index],
-                              style:
-                                  TextStyle(
-                                color: selected
-                                    ? Colors
-                                        .white
-                                    : Colors
-                                        .black,
-                                fontWeight:
-                                    FontWeight
-                                        .w400,
-                              ),
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedSizeIndex = index;
+                          });
+                        },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          width: 45,
+                          height: 45,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: selected
+                                ? Colors.black
+                                : Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            _sizes[index],
+                            style: TextStyle(
+                              color: selected ? Colors.white : Colors.black,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      );
+                    }),
                   ),
 
                   const SizedBox(height: 25),
 
                   const Text(
                     "Description:",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.w600),
                   ),
 
                   const SizedBox(height: 8),
 
                   Text(
                     "There are many variations of passages of Lorem Ipsum available.",
-                    style: TextStyle(
-                      color: Colors.grey.shade600,
-                      height: 1.5,
-                    ),
+                    style: TextStyle(color: Colors.grey.shade600, height: 1.5),
                   ),
                 ],
               ),
@@ -225,14 +178,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
       // ================= BOTTOM BAR =================
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 15,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         child: SafeArea(
           child: Row(
-            mainAxisAlignment:
-                MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 widget.product['price'],
@@ -248,45 +197,26 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   GestureDetector(
                     onTap: () {
                       setState(() {
-                        isFavorite =
-                            !isFavorite;
+                        isFavorite = !isFavorite;
                       });
                     },
                     child: AnimatedScale(
-                      duration:
-                          const Duration(
-                              milliseconds:
-                                  180),
-                      scale:
-                          isFavorite
-                              ? 1.08
-                              : 1,
-                      child:
-                          AnimatedContainer(
-                        duration:
-                            const Duration(
-                                milliseconds:
-                                    220),
+                      duration: const Duration(milliseconds: 180),
+                      scale: isFavorite ? 1.08 : 1,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 220),
                         width: 42,
                         height: 42,
-                        decoration:
-                            BoxDecoration(
+                        decoration: BoxDecoration(
                           color: isFavorite
-                              ? const Color(
-                                  0xFFFF375F)
-                              : const Color(
-                                  0xFFF2F2F2),
-                          borderRadius:
-                              BorderRadius
-                                  .circular(
-                                      8),
+                              ? const Color(0xFFFF375F)
+                              : const Color(0xFFF2F2F2),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         child: Icon(
                           Icons.favorite,
                           size: 18,
-                          color: isFavorite
-                              ? Colors.white
-                              : Colors.black,
+                          color: isFavorite ? Colors.white : Colors.black,
                         ),
                       ),
                     ),
@@ -297,48 +227,37 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   // ADD TO CART
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
+                      Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (_) =>
-                              CartScreen(),
+                          builder: (context) => const MainScreen(
+                            initialIndex:
+                                2, // Sesuaikan index Tab Cart kamu (biasanya 2 atau 3)
+                          ),
                         ),
+                        (route) => false,
                       );
                     },
                     child: Container(
                       height: 42,
-                      padding:
-                          const EdgeInsets.symmetric(
-                        horizontal: 20,
-                      ),
-                      decoration:
-                          BoxDecoration(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      decoration: BoxDecoration(
                         color: Colors.black,
-                        borderRadius:
-                            BorderRadius
-                                .circular(
-                                    8),
+                        borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(
                         children: const [
                           Icon(
-                            Icons
-                                .shopping_cart_outlined,
-                            color: Colors
-                                .white,
+                            Icons.shopping_cart_outlined,
+                            color: Colors.white,
                             size: 18,
                           ),
-                          SizedBox(
-                              width: 8),
+                          SizedBox(width: 8),
                           Text(
                             "Add To Cart",
-                            style:
-                                TextStyle(
-                              color: Colors
-                                  .white,
-                              fontWeight:
-                                  FontWeight
-                                      .w600,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ],
@@ -371,8 +290,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         children: [
           Positioned.fill(
             child: Image.asset(
-              thumbnails[
-                  _selectedThumbnailIndex],
+              thumbnails[_selectedThumbnailIndex],
               fit: BoxFit.cover,
             ),
           ),
@@ -382,61 +300,41 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             top: 20,
             left: 20,
             child: Column(
-              children: List.generate(
-                _colors.length,
-                (index) {
-                  final selected =
-                      _selectedColorIndex ==
-                          index;
+              children: List.generate(_colors.length, (index) {
+                final selected = _selectedColorIndex == index;
 
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _selectedColorIndex =
-                            index;
-                      });
-                    },
-                    child: Container(
-                      margin:
-                          const EdgeInsets.only(
-                              bottom: 12),
-                      width: 24,
-                      height: 24,
-                      decoration:
-                          BoxDecoration(
-                        shape:
-                            BoxShape.circle,
-                        border: Border.all(
-                          color: selected
-                              ? Colors.black
-                              : Colors
-                                  .transparent,
-                          width: 1.5,
-                        ),
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _selectedColorIndex = index;
+                    });
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    width: 24,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: selected ? Colors.black : Colors.transparent,
+                        width: 1.5,
                       ),
-                      child: Center(
-                        child: Container(
-                          width: 18,
-                          height: 18,
-                          decoration:
-                              BoxDecoration(
-                            shape: BoxShape
-                                .circle,
-                            color: _colors[
-                                        index] ==
-                                    Colors
-                                        .transparent
-                                ? const Color(
-                                    0xFFDCDCDC)
-                                : _colors[
-                                    index],
-                          ),
+                    ),
+                    child: Center(
+                      child: Container(
+                        width: 18,
+                        height: 18,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: _colors[index] == Colors.transparent
+                              ? const Color(0xFFDCDCDC)
+                              : _colors[index],
                         ),
                       ),
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              }),
             ),
           ),
 
@@ -446,60 +344,38 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             left: 0,
             right: 0,
             child: Row(
-              mainAxisAlignment:
-                  MainAxisAlignment
-                      .center,
-              children: List.generate(
-                thumbnails.length,
-                (index) {
-                  final selected =
-                      _selectedThumbnailIndex ==
-                          index;
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(thumbnails.length, (index) {
+                final selected = _selectedThumbnailIndex == index;
 
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _selectedThumbnailIndex =
-                            index;
-                      });
-                    },
-                    child: Container(
-                      margin:
-                          const EdgeInsets.symmetric(
-                              horizontal: 6),
-                      width: 50,
-                      height: 50,
-                      decoration:
-                          BoxDecoration(
-                        color:
-                            Colors.white,
-                        borderRadius:
-                            BorderRadius
-                                .circular(
-                                    8),
-                        border:
-                            Border.all(
-                          color: selected
-                              ? Colors.red
-                              : Colors
-                                  .transparent,
-                          width: 1.5,
-                        ),
-                      ),
-                      child: Padding(
-                        padding:
-                            const EdgeInsets.all(
-                                4),
-                        child: Image.asset(
-                          thumbnails[index],
-                          fit: BoxFit
-                              .contain,
-                        ),
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _selectedThumbnailIndex = index;
+                    });
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 6),
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: selected ? Colors.red : Colors.transparent,
+                        width: 1.5,
                       ),
                     ),
-                  );
-                },
-              ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: Image.asset(
+                        thumbnails[index],
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                );
+              }),
             ),
           ),
         ],
