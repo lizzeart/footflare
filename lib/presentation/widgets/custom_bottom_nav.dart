@@ -16,7 +16,9 @@ class CustomBottomNav extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 15),
       decoration: BoxDecoration(
         color: Colors.white, // Frame dibuat konsisten selalu putih
-        border: Border(top: BorderSide(color: Colors.grey.shade200)), // Garis batas atas yang tipis
+        border: Border(
+          top: BorderSide(color: Colors.grey.shade200),
+        ), // Garis batas atas yang tipis
       ),
       child: SafeArea(
         child: Row(
@@ -59,7 +61,7 @@ class CustomBottomNav extends StatelessWidget {
                 color: Colors.black,
                 borderRadius: BorderRadius.circular(2),
               ),
-            )
+            ),
         ],
       ),
     );
