@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'widgets/cart_item_card.dart';
 import 'checkout_screen.dart';
+import 'package:footflare/presentation/main_screen.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -17,19 +18,19 @@ class _CartScreenState extends State<CartScreen> {
       "name": "Echo Vibe Urban Runners",
       "price": 179,
       "qty": 1,
-      "image": "assets/images/shoe1.png", // Sesuaikan nama filenya
+      "image": "assets/images/pic6.png", // Sesuaikan nama filenya
     },
     {
       "name": "Swift Glide Sprinter Soles",
       "price": 199,
       "qty": 1,
-      "image": "assets/images/shoe2.png",
+      "image": "assets/images/pic2.png",
     },
     {
       "name": "Zen Dash Active Flex Shoes",
       "price": 150,
       "qty": 1,
-      "image": "assets/images/shoe3.png",
+      "image": "assets/images/pic3.png",
     },
   ];
 
@@ -85,7 +86,15 @@ class _CartScreenState extends State<CartScreen> {
               borderRadius: BorderRadius.circular(10),
             ),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                // Fungsi ini akan pindah ke MainScreen dan menghapus semua halaman sebelumnya
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MainScreen()),
+                  (route) =>
+                      false, // Ini yang tadi kita bahas untuk hapus semua stack
+                );
+              },
               style: ButtonStyle(
                 overlayColor: WidgetStateProperty.all(Colors.transparent),
                 splashFactory: NoSplash.splashFactory,

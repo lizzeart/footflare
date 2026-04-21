@@ -316,22 +316,18 @@ class _PaymentScreenState extends State<PaymentScreen> {
             MouseRegion(
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
-                // Ganti TextButton.icon menjadi GestureDetector
                 onTap: () {
-                  // Navigasi Instan ke AddCardScreen
                   Navigator.push(
                     context,
                     PageRouteBuilder(
                       pageBuilder: (context, animation1, animation2) =>
                           const AddCardScreen(),
-                      transitionDuration:
-                          Duration.zero, // Langsung ganti tanpa geser
+                      transitionDuration: Duration.zero,
                       reverseTransitionDuration: Duration.zero,
                     ),
                   );
                 },
                 child: const Row(
-                  // Struktur Row manual agar lebih fleksibel
                   children: [
                     Icon(
                       Icons.add_circle_outline,
@@ -359,12 +355,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
-              _buildVisaCard(Colors.black, "4532", "ROOPA SMITH"),
+              // ✅ Tambah parameter type di sini
+              _buildVisaCard(
+                Colors.black,
+                "4532",
+                "ROOPA SMITH",
+                "CREDIT CARD",
+              ),
               _buildVisaCard(
                 const Color(0xFF3DA384),
                 "1234",
                 "ROOPA SMITH",
-              ), // Contoh kartu lain
+                "DEBIT CARD",
+              ),
             ],
           ),
         ),
@@ -372,7 +375,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-  Widget _buildVisaCard(Color bgColor, String lastFour, String name) {
+  // ✅ Tambah parameter type
+  Widget _buildVisaCard(
+    Color bgColor,
+    String lastFour,
+    String name,
+    String type,
+  ) {
     return Container(
       width: 280,
       margin: const EdgeInsets.only(right: 16),
@@ -384,23 +393,81 @@ class _PaymentScreenState extends State<PaymentScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Icon(
-                Icons.radio_button_checked,
-                color: Colors.white,
-                size: 20,
-              ), // Radio selected
-              Text(
-                "VISA",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+          SizedBox(
+            height: 40,
+            child: Stack(
+              children: [
+                // KIRI ATAS (radio + text)
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.radio_button_checked,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        type,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+
+                // KANAN ATAS (LOGO)
+                Align(
+                  alignment: Alignment.topRight,
+                  child: type == "DEBIT CARD"
+                      ? SizedBox(
+                          width: 50,
+                          height: 30,
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                left: 0,
+                                child: Container(
+                                  width: 24,
+                                  height: 24,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.white.withOpacity(
+                                      0.6,
+                                    ), // ⬅️ ini
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                left: 14,
+                                child: Container(
+                                  width: 24,
+                                  height: 24,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.white.withOpacity(
+                                      0.6,
+                                    ), // beda dikit biar ada depth
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : Image.asset(
+                          "assets/images/visa.png",
+                          width: 45,
+                          color: Colors.white,
+                          colorBlendMode: BlendMode.srcIn,
+                        ),
+                ),
+              ],
+            ),
           ),
           const Spacer(),
           Text(

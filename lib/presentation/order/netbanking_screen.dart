@@ -101,13 +101,28 @@ class NetbankingScreen extends StatelessWidget {
   }
 
   Widget _buildPopularBanksCard() {
+    final bankImages = [
+      "assets/images/bank1.png",
+      "assets/images/bank2.png",
+      "assets/images/bank3.png",
+      "assets/images/bank4.png",
+      "assets/images/bank5.png",
+      "assets/images/bank6.png",
+      "assets/images/bank7.png",
+      "assets/images/bank8.png",
+    ];
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       child: Column(
@@ -115,25 +130,44 @@ class NetbankingScreen extends StatelessWidget {
         children: [
           const Text(
             "Popular Banks",
-            style: TextStyle(fontFamily: 'Jost', fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontFamily: 'Jost',
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
+            ),
           ),
+
+          const SizedBox(height: 8),
+
+          // 🔥 GARIS PEMISAH
+          Container(
+            width: double.infinity,
+            height: 1,
+            color: const Color(0xFFEAEAEA),
+          ),
+
           const SizedBox(height: 16),
-          GridView.count(
+
+          GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            crossAxisCount: 3,
-            mainAxisSpacing: 20,
-            crossAxisSpacing: 20,
-            children: List.generate(
-              8,
-              (index) => Container(
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF8F8F8),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const Icon(Icons.account_balance, color: Colors.grey),
-              ),
+            itemCount: bankImages.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4, // 4 kolom biar rapi
+              mainAxisSpacing: 12, // 🔥 jarak vertikal lebih rapat
+              crossAxisSpacing: 12,
+              childAspectRatio: 1,
             ),
+            itemBuilder: (context, index) {
+              return Center(
+                child: Image.asset(
+                  bankImages[index],
+                  width: 56, // ukuran logo
+                  height: 56,
+                  fit: BoxFit.contain,
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -153,6 +187,7 @@ class NetbankingScreen extends StatelessWidget {
       "Cosmos Bank",
       "Corporation Bank",
     ];
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

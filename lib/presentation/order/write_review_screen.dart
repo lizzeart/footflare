@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'my_order_screen.dart';
+import '../product_detail/product_detail_page.dart';
 
 class WriteReviewScreen extends StatefulWidget {
   final Map<String, String> item;
@@ -162,7 +162,13 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const DummyDetailProduct(),
+                builder: (context) => ProductDetailPage(
+                  product: {
+                    "name": item['name'],
+                    "price": "\$${item['price']}",
+                    "image": item['image'],
+                  },
+                ),
               ),
             ),
             child: Container(
@@ -234,7 +240,13 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
                       onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const DummyDetailProduct(),
+                          builder: (context) => ProductDetailPage(
+                            product: {
+                              "name": item['name'],
+                              "price": "\$${item['price']}",
+                              "image": item['image'],
+                            },
+                          ),
                         ),
                       ),
                       child: Container(

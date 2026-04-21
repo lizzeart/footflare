@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:footflare/presentation/widgets/custom_bottom_nav.dart';
 import 'track_order_screen.dart';
 import 'write_review_screen.dart';
+import 'package:footflare/presentation/main_screen.dart';
+import 'package:footflare/presentation/product_detail/product_detail_page.dart';
 
 class MyOrderScreen extends StatefulWidget {
   const MyOrderScreen({super.key});
@@ -65,18 +66,12 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
               ),
               child: IconButton(
                 onPressed: () {
+                  // Fungsi ini akan pindah ke MainScreen dan menghapus semua halaman sebelumnya
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => CustomBottomNav(
-                        currentIndex: 0, // Berikan nilai awal
-                        onTap: (index) {
-                          // Tambahkan logika perpindahan halaman di sini jika perlu
-                          print("Pindah ke index: $index");
-                        },
-                      ),
-                    ),
-                    (route) => false,
+                    MaterialPageRoute(builder: (context) => const MainScreen()),
+                    (route) =>
+                        false, // Ini yang tadi kita bahas untuk hapus semua stack
                   );
                 },
                 style: ButtonStyle(
@@ -87,7 +82,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
                 icon: const Icon(
                   Icons.home_filled,
                   color: Colors.black,
-                  size: 20,
+                  size: 18,
                 ),
               ),
             ),
@@ -165,17 +160,17 @@ class OrderList extends StatelessWidget {
       {
         "name": "Echo Vibe Urban Runners",
         "price": "179",
-        "image": "assets/images/shoe1.png",
+        "image": "assets/images/pic6.png",
       },
       {
         "name": "Swift Glide Sprinter Soles",
         "price": "199",
-        "image": "assets/images/shoe2.png",
+        "image": "assets/images/pic2.png",
       },
       {
         "name": "Zen Dash Active Flex Shoes",
         "price": "299",
-        "image": "assets/images/shoe3.png",
+        "image": "assets/images/pic3.png",
       },
     ];
 
@@ -194,7 +189,6 @@ class OrderList extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // FOTO PRODUK (Navigasi ke Detail & Kursor Telunjuk)
-            // FOTO PRODUK (Navigasi ke Detail & Kursor Telunjuk)
             MouseRegion(
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
@@ -202,7 +196,13 @@ class OrderList extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const DummyDetailProduct(),
+                      builder: (context) => ProductDetailPage(
+                        product: {
+                          "name": item['name'],
+                          "price": "\$${item['price']}",
+                          "image": item['image'],
+                        },
+                      ),
                     ),
                   );
                 },
@@ -213,14 +213,12 @@ class OrderList extends StatelessWidget {
                     color: const Color(0xFFF3F3F3),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  // PERBAIKAN: Ganti Icon dengan Image.asset
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Image.asset(
                       item['image']!,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
-                        // Jika path salah/gambar tidak ketemu, tampilkan icon error
                         return const Icon(
                           Icons.broken_image,
                           color: Colors.grey,
@@ -324,19 +322,6 @@ class OrderList extends StatelessWidget {
           ],
         );
       },
-    );
-  }
-}
-
-// Dummy Page untuk Detail Produk
-class DummyDetailProduct extends StatelessWidget {
-  const DummyDetailProduct({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Product Detail")),
-      body: const Center(child: Text("Halaman Detail Produk (Node)")),
     );
   }
 }

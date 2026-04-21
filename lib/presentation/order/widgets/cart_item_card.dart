@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../product_detail/product_detail_page.dart';
 
 class CartItemCard extends StatefulWidget {
   final String name;
@@ -92,9 +93,12 @@ class _CartItemCardState extends State<CartItemCard> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => Scaffold(
-                appBar: AppBar(title: Text(widget.name)),
-                body: const Center(child: Text("Halaman Detail Produk")),
+              builder: (context) => ProductDetailPage(
+                product: {
+                  "name": widget.name,
+                  "price": widget.price,
+                  "image": widget.imagePath,
+                },
               ),
             ),
           );
