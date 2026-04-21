@@ -12,20 +12,21 @@ class _PromoBannerState extends State<PromoBanner> {
   final PageController _pageController = PageController(initialPage: 3000);
   int _currentPage = 3000;
 
+  // Data Produk Promo
   final List<Map<String, String>> _promos = [
     {
       'subtitle': "WOMAN'S SHOES",
-      'title': 'Nike SB Zoom\nStefan Janoski',
+      'title': 'Nike SB\nZoom Stefan\nJanoski', 
       'image': 'assets/images/kaki-1.png',
     },
     {
       'subtitle': "MEN'S RUNNING",
-      'title': 'Adidas UltraBoost\nLight Performance',
+      'title': 'Adidas\nUltraBoost\nPerformance',
       'image': 'assets/images/kaki-2.png',
     },
     {
       'subtitle': "LIMITED EDITION",
-      'title': 'Air Jordan 1\nRetro High Classic',
+      'title': 'Air Jordan 1\nRetro High\nClassic',
       'image': 'assets/images/kaki-3.png',
     },
   ];
@@ -38,35 +39,36 @@ class _PromoBannerState extends State<PromoBanner> {
 
   @override
   Widget build(BuildContext context) {
-    // Mendeteksi mode tema
+    // 1. Deteksi tema aktif (Dark/Light) dari context
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
       width: double.infinity,
-      height: 190, 
+      height: 215, // Tinggi Banner Dinaikkan
       decoration: const BoxDecoration(
-        color: Color(0xFFF3EFE6), 
+        color: Color(0xFFF3EFE6), // Background Banner
       ),
       child: Stack(
         children: [
-          // --- 1. RECTANGLE PUTIH STATIS ---
+          // --- RECTANGLE PUTIH STATIS ---
           Positioned(
             right: 35, 
             bottom: 0, 
-            width: 100, 
-            height: 170, 
+            width: 110, // Diperlebar
+            height: 195, // Dipertinggi
             child: Container(
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(200), 
-                  bottom: Radius.zero,       
+                  top: Radius.circular(200), // Rounded Top
+                  bottom: Radius.zero,       // Flat Bottom
                 ),
               ),
             ),
           ),
 
-          // --- 2. FOTO KAKI (ANIMASI MEMUDAR INFINITE LOOP) ---
+          // --- FOTO KAKI (ANIMASI MEMUDAR INFINITE LOOP) ---
           Positioned(
             right: 0, 
             top: 0, 
@@ -90,9 +92,15 @@ class _PromoBannerState extends State<PromoBanner> {
 
                     return Opacity(
                       opacity: opacity,
-                      child: Image.asset(
-                        _promos[i]['image']!,
-                        fit: BoxFit.fitHeight, 
+                      child: Padding(
+                        // PERUBAHAN UTAMA: Hapus padding/margin di bagian atas
+                        // Hanya beri sedikit jarak bawah agar gambar tidak terpotong
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Image.asset(
+                          _promos[i]['image']!,
+                          fit: BoxFit.fitHeight, // Mengisi Tinggi
+                          alignment: Alignment.topCenter, // Menempel ke Atas
+                        ),
                       ),
                     );
                   }),
@@ -101,7 +109,7 @@ class _PromoBannerState extends State<PromoBanner> {
             ),
           ),
 
-          // --- 3. KONTEN DINAMIS (TEKS & TOMBOL) ---
+          // --- KONTEN DINAMIS (TEKS & TOMBOL) ---
           PageView.builder(
             controller: _pageController,
             onPageChanged: (index) {
@@ -128,21 +136,21 @@ class _PromoBannerState extends State<PromoBanner> {
 
                   return Container(
                     width: double.infinity,
-                    color: Colors.transparent, 
+                    color: Colors.transparent, // Background Transparan
                     child: Stack(
                       children: [
                         Positioned(
                           left: 20 + subtitleOffset,
-                          top: 25,
+                          top: 28, // Jarak Atas Diselaraskan
                           child: Opacity(
                             opacity: opacity,
                             child: Text(
                               promo['subtitle']!,
                               style: const TextStyle(
                                 fontFamily: 'Inter',
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w600,
                                 color: Colors.redAccent, 
-                                fontSize: 12, 
+                                fontSize: 12, // Diperbesar
                                 letterSpacing: 1.2
                               ),
                             ),
@@ -151,65 +159,58 @@ class _PromoBannerState extends State<PromoBanner> {
                         
                         Positioned(
                           left: 20 + titleOffset,
-                          top: 50,
+                          top: 52, // Jarak Atas Diselaraskan
                           child: Opacity(
                             opacity: opacity,
                             child: Text(
                               promo['title']!,
                               style: const TextStyle(
                                 fontFamily: 'Jost',
-                                fontWeight: FontWeight.w500,
-                                fontSize: 23, 
-                                height: 1.2, 
-                                color: Colors.black,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 24, // Diperkecil Sedikit
+                                height: 1.15, // Jarak Baris Rapat
+                                color: Colors.black, // Judul Hitam
                               ),
                             ),
                           ),
                         ),
                         
-                        // --- TOMBOL SHOP NOW INTERAKTIF ---
                         Positioned(
                           left: 20 + buttonOffset,
-                          bottom: 25,
+                          bottom: 25, // Jarak Bawah Diselaraskan
                           child: Opacity(
                             opacity: opacity,
                             child: ElevatedButton(
                               style: ButtonStyle(
-                                padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 24, vertical: 12)),
+                                // PERUBAHAN: Padding Diperkecil
+                                padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
                                 shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-                                
-                                // LOGIKA WARNA BACKGROUND (Berubah saat diklik)
                                 backgroundColor: WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
                                   if (states.contains(WidgetState.pressed)) {
-                                    return isDark ? Colors.black : Colors.white; // Saat tombol ditahan/diklik
+                                    return isDark ? Colors.black : Colors.white; // Pressed BG
                                   }
-                                  return isDark ? Colors.white : Colors.black;   // Keadaan normal
+                                  return isDark ? Colors.white : Colors.black;   // Normal BG
                                 }),
-                                
-                                // LOGIKA WARNA TEKS (Berubah saat diklik)
                                 foregroundColor: WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
                                   if (states.contains(WidgetState.pressed)) {
-                                    return isDark ? Colors.white : Colors.black; // Saat tombol ditahan/diklik
+                                    return isDark ? Colors.white : Colors.black; // Pressed Text
                                   }
-                                  return isDark ? Colors.black : Colors.white;   // Keadaan normal
+                                  return isDark ? Colors.black : Colors.white;   // Normal Text
                                 }),
-
-                                // Tambahan garis border tipis saat mode terang agar tombol putih tidak menyatu dengan background
                                 side: WidgetStateProperty.resolveWith<BorderSide>((Set<WidgetState> states) {
                                   if (!isDark && states.contains(WidgetState.pressed)) {
-                                    return const BorderSide(color: Colors.black, width: 1);
+                                    return const BorderSide(color: Colors.black, width: 1); // Border Pressed (Light)
                                   }
                                   return BorderSide.none;
                                 }),
                               ),
-                              onPressed: () {
-                                // Aksi saat tombol ditekan (bisa ditambahkan navigasi ke halaman produk nanti)
-                              },
+                              onPressed: () {},
                               child: const Text(
                                 'Shop Now', 
                                 style: TextStyle(
                                   fontFamily: 'Jost',
-                                  fontWeight: FontWeight.w500 
+                                  fontSize: 13, // Diperkecil
+                                  fontWeight: FontWeight.w600 
                                 )
                               ),
                             ),

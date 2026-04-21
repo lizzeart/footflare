@@ -6,109 +6,65 @@ class BrandList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark =
-        Theme.of(context).brightness ==
-            Brightness.dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final List<Map<String, String>> brands = [
-      {
-        'name': 'Nike',
-        'image':
-            'assets/images/logo-nike.png'
-      },
-      {
-        'name': 'Adidas',
-        'image':
-            'assets/images/logo-addidas.png'
-      },
-      {
-        'name': 'Reebok',
-        'image':
-            'assets/images/logo-reebok.png'
-      },
-      {
-        'name': 'Puma',
-        'image':
-            'assets/images/logo-puma.png'
-      },
-      {
-        'name': 'Bata',
-        'image':
-            'assets/images/logo-bata.png'
-      },
+      {'name': 'Nike', 'image': 'assets/images/logo-nike.png'},
+      {'name': 'Adidas', 'image': 'assets/images/logo-addidas.png'},
+      {'name': 'Reebok', 'image': 'assets/images/logo-reebok.png'},
+      {'name': 'Puma', 'image': 'assets/images/logo-puma.png'},
+      {'name': 'Bata', 'image': 'assets/images/logo-bata.png'},
+      // --- 4 Brand Tambahan ---
+      {'name': 'Nike', 'image': 'assets/images/logo-nike.png'},
+      {'name': 'Adidas', 'image': 'assets/images/logo-addidas.png'},
+      {'name': 'Reebok', 'image': 'assets/images/logo-reebok.png'},
+      {'name': 'Bata', 'image': 'assets/images/logo-bata.png'},
     ];
 
     return SizedBox(
-      height: 100,
+      height: 95, // Diperkecil agar lebih proporsional
       child: ListView.builder(
-        scrollDirection:
-            Axis.horizontal,
+        scrollDirection: Axis.horizontal,
         itemCount: brands.length,
-        itemBuilder:
-            (context, index) {
+        itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (_) =>
-                      const MainScreen(
-                    initialIndex: 3,
-                  ),
+                  builder: (_) => const MainScreen(initialIndex: 3),
                 ),
               );
             },
             child: Padding(
-              padding:
-                  const EdgeInsets.only(
-                      right: 20),
+              padding: const EdgeInsets.only(right: 20),
               child: Column(
                 children: [
                   Container(
-                    width: 60,
-                    height: 60,
-                    padding:
-                        const EdgeInsets.all(
-                            14),
-                    decoration:
-                        BoxDecoration(
-                      shape:
-                          BoxShape.circle,
+                    width: 62, // Diperkecil agar persis referensi
+                    height: 62, 
+                    padding: const EdgeInsets.all(14), // Disesuaikan agar logo pas
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
                       border: Border.all(
-                        color: isDark
-                            ? Colors.grey
-                                .shade700
-                            : Colors.grey
-                                .shade300,
+                        color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
+                        width: 1.0,
                       ),
-                      color:
-                          Colors.white,
+                      color: Colors.white,
                     ),
                     child: Image.asset(
-                      brands[index]
-                          ['image']!,
-                      fit: BoxFit
-                          .contain,
+                      brands[index]['image']!,
+                      fit: BoxFit.contain,
                     ),
                   ),
-
-                  const SizedBox(
-                      height: 8),
-
+                  const SizedBox(height: 8),
                   Text(
-                    brands[index]
-                        ['name']!,
-                    style:
-                        TextStyle(
-                      fontSize:
-                          12,
-                      fontWeight:
-                          FontWeight
-                              .w500,
-                      color: Theme.of(
-                              context)
-                          .colorScheme
-                          .onSurface,
+                    brands[index]['name']!,
+                    style: TextStyle(
+                      fontFamily: 'Jost',
+                      fontSize: 12, // Diperkecil agar lebih rapi
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                 ],

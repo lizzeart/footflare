@@ -55,7 +55,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               },
               child: Image.asset(
                 isDark ? 'assets/images/logo-putih.png' : 'assets/images/logo-hitam.png',
-                height: 28, // Diperbesar dari sebelumnya 28 agar lebih ideal
+                height: 26, // Diperbesar dari sebelumnya 28 agar lebih ideal
                 fit: BoxFit.contain,
               ),
             ),

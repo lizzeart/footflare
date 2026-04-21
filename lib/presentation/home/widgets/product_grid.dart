@@ -20,35 +20,35 @@ class _ProductGridState extends State<ProductGrid> {
     {
       'name': 'Echo Vibe Urban Runners', 
       'price': '\$149', 
-      'isFavorite': true,
+      'isFavorite': false,
       'image': 'assets/images/pic2.png',
       'discount': '' 
     },
     {
-      'name': 'Zen Dash Active Flex', 
+      'name': 'Zen Dash Active Flex Shoes', // Nama diperbarui sesuai referensi
       'price': '\$299', 
       'isFavorite': false,
       'image': 'assets/images/pic3.png',
       'discount': '' 
     },
     {
-      'name': 'Nova Stride Street', 
+      'name': 'Nova Stride Street Stompers', // Nama diperbarui sesuai referensi
       'price': '\$99', 
       'isFavorite': false,
       'image': 'assets/images/pic4.png',
       'discount': '30% OFF'
     },
     {
-      'name': 'Aero Glide Pro', 
-      'price': '\$129', 
+      'name': 'Evo Quip Evo Quick Strides', 
+      'price': '\$199', 
       'isFavorite': false,
       'image': 'assets/images/pic5.png',
       'discount': '30% OFF'
     },
     {
-      'name': 'Urban Kicks Classic', 
-      'price': '\$89', 
-      'isFavorite': true,
+      'name': 'Echo Vibe Urban Runners', 
+      'price': '\$84', 
+      'isFavorite': false,
       'image': 'assets/images/pic6.png',
       'discount': '20% OFF'
     },
@@ -64,8 +64,8 @@ class _ProductGridState extends State<ProductGrid> {
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2, 
         crossAxisSpacing: 16, 
-        mainAxisSpacing: 16, 
-        childAspectRatio: 0.65,
+        mainAxisSpacing: 24, // Jarak antar baris diperbesar agar muat 2 baris teks
+        childAspectRatio: 0.58, // Rasio diubah agar kartu sedikit lebih tinggi
       ),
       itemCount: _products.length,
       itemBuilder: (context, index) {
@@ -87,23 +87,21 @@ class _ProductGridState extends State<ProductGrid> {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF8F8F8), 
+                    color: isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF5F5F5), // Background kartu disamakan dengan referensi
                     borderRadius: BorderRadius.circular(16)
                   ),
                   child: Stack(
                     children: [
-                      // --- GAMBAR SEPATU FULL TANPA PADDING ---
                       Positioned.fill(
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16), // Menyesuaikan dengan radius container agar tidak bocor
+                          borderRadius: BorderRadius.circular(16), 
                           child: Image.asset(
                             product['image'],
-                            fit: BoxFit.cover, // Memaksa gambar merentang memenuhi seluruh ruang
+                            fit: BoxFit.cover, 
                           ),
                         ),
                       ), 
                       
-                      // Pita Diskon
                       if (product['discount'] != null && product['discount'].toString().isNotEmpty)
                         Positioned(
                           top: 0, 
@@ -111,11 +109,10 @@ class _ProductGridState extends State<ProductGrid> {
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 12),
                             decoration: BoxDecoration(
-                              color: product['name'] == 'Nova Stride Street' 
+                              // Logika warna merah muda/krimson untuk produk tertentu sesuai referensi
+                              color: product['name'].toString().contains('Nova') || product['discount'].toString().contains('20%')
                                   ? const Color(0xFFC70039) 
-                                  : product['discount'].contains('30%') 
-                                      ? Colors.black 
-                                      : const Color(0xFFC70039),
+                                  : Colors.black,
                               borderRadius: const BorderRadius.vertical(bottom: Radius.circular(100)),
                             ),
                             child: RotatedBox(
@@ -130,7 +127,6 @@ class _ProductGridState extends State<ProductGrid> {
                           ),
                         ),
                       
-                      // Tombol Hati
                       Positioned(
                         top: 10, right: 10,
                         child: GestureDetector(
@@ -141,7 +137,7 @@ class _ProductGridState extends State<ProductGrid> {
                           },
                           child: Icon(
                             product['isFavorite'] ? Icons.favorite : Icons.favorite_border,
-                            color: product['isFavorite'] ? Colors.red : Colors.grey.shade400, 
+                            color: product['isFavorite'] ? const Color(0xFFC70039) : Colors.grey.shade400, 
                             size: 20,
                           ),
                         ),
@@ -151,24 +147,47 @@ class _ProductGridState extends State<ProductGrid> {
                 ),
               ),
               const SizedBox(height: 12),
+              
+              // --- PERBAIKAN TEKS JUDUL (Max 2 Baris) ---
               Text(
                 product['name'], 
-                style: TextStyle(fontFamily: 'Jost', fontWeight: FontWeight.w500, fontSize: 14, color: Theme.of(context).colorScheme.onSurface), 
-                maxLines: 1, 
+                style: TextStyle(
+                  fontFamily: 'Jost', 
+                  fontWeight: FontWeight.w600, 
+                  fontSize: 14, 
+                  color: Theme.of(context).colorScheme.onSurface
+                ), 
+                maxLines: 2, // Memungkinkan teks turun ke baris kedua jika panjang
                 overflow: TextOverflow.ellipsis
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 8),
+              
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // --- PERBAIKAN HARGA (Lebih Bold) ---
                   Text(
                     product['price'], 
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Theme.of(context).colorScheme.onSurface)
+                    style: TextStyle(
+                      fontFamily: 'Jost',
+                      fontWeight: FontWeight.bold, 
+                      fontSize: 18, // Diperbesar
+                      color: Theme.of(context).colorScheme.onSurface
+                    )
                   ),
+                  
+                  // --- PERBAIKAN KOTAK PANAH (Bukan Lingkaran) ---
                   Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200, shape: BoxShape.circle),
-                    child: Icon(Icons.arrow_forward, size: 16, color: Theme.of(context).colorScheme.onSurface),
+                    padding: const EdgeInsets.all(6), // Padding agar ikon lega
+                    decoration: BoxDecoration(
+                      color: isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF5F5F5), // Warna kotak panah
+                      borderRadius: BorderRadius.circular(8), // Menggunakan lengkungan kotak, BUKAN shape circle
+                    ),
+                    child: Icon(
+                      Icons.arrow_forward, 
+                      size: 18, 
+                      color: Theme.of(context).colorScheme.onSurface
+                    ),
                   )
                 ],
               )
