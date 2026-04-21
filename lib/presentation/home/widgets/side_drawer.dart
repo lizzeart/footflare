@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:footflare/main.dart';
+import 'package:footflare/presentation/auth/splash_screen.dart';
 
 // --- Import Halaman MainScreen untuk navigasi ---
 // Pastikan path ini sesuai dengan lokasi file MainScreen kamu
@@ -134,12 +135,20 @@ class SideDrawer extends StatelessWidget {
   // Fungsi helper untuk navigasi agar Nav Bar tetap ada
   void _navigateToPage(BuildContext context, int index) {
     Navigator.pop(context); // Tutup drawer
+
+    // 1. CEK JIKA INDEX ADALAH LOGOUT (-1)
     if (index == -1) {
-      // Logika Logout di sini jika perlu
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const SplashScreen(),
+        ), // Kembali ke awal
+        (route) => false, // Hapus semua riwayat halaman
+      );
       return;
     }
 
-    // Pindah ke MainScreen dengan index tertentu
+    // 2. LOGIKA NAVIGASI BIASA KE HALAMAN LAIN
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => MainScreen(initialIndex: index)),
