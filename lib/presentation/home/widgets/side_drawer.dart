@@ -1,6 +1,11 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import '../../../../main.dart'; 
+import 'package:footflare/main.dart'; 
+
+// Import menggunakan Path Absolut
+import 'package:footflare/presentation/wishlist/wishlist_page.dart';
+import 'package:footflare/presentation/home/home_page.dart';
+import 'package:footflare/presentation/search/search_page.dart';
 
 class SideDrawer extends StatelessWidget {
   const SideDrawer({super.key});
@@ -13,9 +18,8 @@ class SideDrawer extends StatelessWidget {
       filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
       child: Theme(
         data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
-        // Menggunakan SizedBox untuk merampingkan ukuran kotak drawer/bar ke kiri
         child: SizedBox(
-          width: MediaQuery.of(context).size.width * 0.72, // Sekitar 72% dari lebar layar
+          width: MediaQuery.of(context).size.width * 0.72,
           child: Drawer(
             child: Container(
               decoration: BoxDecoration(
@@ -26,13 +30,20 @@ class SideDrawer extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildProfileHeader(context, isDark),
+                    // Tambahkan InkWell di sini untuk fungsi klik Profile
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context); // Tutup drawer
+                        // Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfilePage()));
+                      },
+                      child: _buildProfileHeader(context, isDark),
+                    ),
                     Divider(color: isDark ? Colors.white10 : Colors.grey.shade200, thickness: 1, height: 1),
                     Expanded(
                       child: ListView(
                         padding: EdgeInsets.zero,
                         children: [
-                          const SizedBox(height: 10), // Sedikit jarak setelah garis pembatas
+                          const SizedBox(height: 10),
                           _buildMenuItem(context, Icons.home_outlined, 'Home'),
                           _buildMenuItem(context, Icons.shopping_bag_outlined, 'Products'),
                           _buildMenuItem(context, Icons.grid_view_outlined, 'Components'),
@@ -68,21 +79,18 @@ class SideDrawer extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start, // Memastikan avatar sejajar atas
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // --- FOTO PROFIL ASLI ---
           const CircleAvatar(
             radius: 25, 
-            backgroundColor: Colors.transparent, // Hapus warna abu-abu
-            backgroundImage: AssetImage('assets/images/profil.png'), // Mengambil gambar profil.png
+            backgroundColor: Colors.transparent,
+            backgroundImage: AssetImage('assets/images/profil.png'),
           ),
           const SizedBox(width: 15),
-          
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Baris ini menempatkan Nama dan Toggle sejajar di bagian atas
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -95,8 +103,6 @@ class SideDrawer extends StatelessWidget {
                         color: Theme.of(context).colorScheme.onSurface
                       )
                     ),
-                    
-                    // --- TOGGLE TEMA DENGAN BACKGROUND KEHIJAUAN ---
                     ValueListenableBuilder<ThemeMode>(
                       valueListenable: themeNotifier,
                       builder: (context, currentMode, child) {
@@ -106,7 +112,6 @@ class SideDrawer extends StatelessWidget {
                             duration: const Duration(milliseconds: 300),
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                             decoration: BoxDecoration(
-                              // Warna hijau lembut di mode siang, abu-abu gelap di mode malam
                               color: isDark ? const Color(0xFF2A2D3A) : const Color(0xFFE4EDE7),
                               borderRadius: BorderRadius.circular(20),
                             ),
@@ -123,11 +128,7 @@ class SideDrawer extends StatelessWidget {
                     )
                   ],
                 ),
-                
-                const SizedBox(height: 2), // Jarak tipis antara nama dan email
-                
-                // --- TEKS EMAIL ---
-                // Karena toggle sudah dipindah ke atas, email sekarang bisa memanjang tanpa terpotong
+                const SizedBox(height: 2),
                 Text(
                   'example@gmail.com', 
                   style: TextStyle(
@@ -157,9 +158,20 @@ class SideDrawer extends StatelessWidget {
         )
       ),
       trailing: const Icon(Icons.chevron_right, color: Colors.grey),
-      onTap: () {},
+      onTap: () {
+        // --- LOGIKA NAVIGASI ---
+        Navigator.pop(context); // Tutup drawer otomatis saat diklik
+        
+        if (title == 'Home') {
+          // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));
+        } else if (title == 'Wishlist') {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const WishlistPage()));
+        } else if (title == 'Profile') {
+          // Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfilePage()));
+        }
+      },
       dense: true,
-      visualDensity: const VisualDensity(vertical: -2), // Merapatkan jarak antar menu
+      visualDensity: const VisualDensity(vertical: -2),
     );
   }
 }
