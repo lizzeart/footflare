@@ -4,6 +4,7 @@ import 'package:footflare/presentation/order/cart_screen.dart';
 import 'package:footflare/presentation/wishlist/wishlist_page.dart';
 import 'package:footflare/presentation/profile/profile_page.dart';
 import 'package:footflare/presentation/widgets/custom_bottom_nav.dart';
+import 'package:footflare/presentation/home/widgets/side_drawer.dart';
 import 'package:footflare/presentation/category/category_page.dart';
 
 class MainScreen extends StatefulWidget {
@@ -38,7 +39,13 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_currentIndex],
+      drawer: const SideDrawer(),
+
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _pages,
+      ),
+
       bottomNavigationBar: CustomBottomNav(
         currentIndex: _currentIndex,
         onTap: (index) {
