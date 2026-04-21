@@ -2,7 +2,17 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-// Sesuaikan import ini dengan nama project dan folder kamu
+// --- Import Halaman Tujuan ---
+import 'package:footflare/presentation/main_screen.dart'; 
+import 'package:footflare/presentation/order/my_order_screen.dart';
+import 'package:footflare/presentation/wishlist/wishlist_page.dart';
+import 'package:footflare/presentation/order/track_order_screen.dart';
+import 'package:footflare/presentation/order/payment_screen.dart';
+import 'package:footflare/presentation/order/add_address_screen.dart';
+import 'package:footflare/presentation/notification/notification_page.dart';
+import 'package:footflare/presentation/search/search_page.dart'; 
+
+// --- Komponen Pendukung Lainnya ---
 import 'package:footflare/presentation/profile/language_modal.dart';
 import 'package:footflare/presentation/profile/write_review_page.dart';
 import 'package:footflare/presentation/profile/faq_page.dart';
@@ -16,7 +26,7 @@ class FootFlareProfile extends StatefulWidget {
 }
 
 class _FootFlareProfileState extends State<FootFlareProfile> {
-  String selectedLanguage = "Select Language"; 
+  String selectedLanguage = "Select Language";
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +36,21 @@ class _FootFlareProfileState extends State<FootFlareProfile> {
         backgroundColor: Colors.white,
         elevation: 0,
         scrolledUnderElevation: 0,
-        // Tombol Back di kiri
         leading: Padding(
           padding: const EdgeInsets.only(left: 15, top: 8, bottom: 8),
           child: GestureDetector(
-            onTap: () => Navigator.of(context).maybePop(),
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              } else {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MainScreen()),
+                  (route) => false,
+                );
+              }
+            },
             child: _buildSquareButton(Icons.arrow_back_ios_new, size: 18),
           ),
         ),
@@ -38,17 +58,22 @@ class _FootFlareProfileState extends State<FootFlareProfile> {
         title: const Text(
           'Profile',
           style: TextStyle(
-            fontWeight: FontWeight.bold, 
-            fontSize: 18, 
-            color: Colors.black, 
-            fontFamily: 'Jost'
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            color: Colors.black,
+            fontFamily: 'Jost',
           ),
         ),
-        // Tombol Search di kanan
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 15),
-            child: _buildSquareButton(Icons.search, size: 22),
+            child: GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SearchPage()),
+              ),
+              child: _buildSquareButton(Icons.search, size: 22),
+            ),
           ),
         ],
       ),
@@ -58,23 +83,19 @@ class _FootFlareProfileState extends State<FootFlareProfile> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
-            // Header Profile (Avatar & Name)
-            Row(
+            const Row(
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 30,
-                  backgroundImage: NetworkImage('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCylXFV0XklUkisnNXZkn65Z1u6JSwEOopEA&s'),
+                  backgroundImage: AssetImage('assets/images/wajahAmel.png'),
                 ),
-                const SizedBox(width: 15),
-                const Text.rich(
+                SizedBox(width: 15),
+                Text.rich(
                   TextSpan(
                     style: TextStyle(fontSize: 20, color: Colors.black, fontFamily: 'Jost'),
                     children: [
                       TextSpan(text: "Hello, "),
-                      TextSpan(
-                        text: "Ada Wong",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
+                      TextSpan(text: "Amelia", style: TextStyle(fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),
@@ -82,12 +103,28 @@ class _FootFlareProfileState extends State<FootFlareProfile> {
             ),
             const SizedBox(height: 25),
             
-            // Grid Buttons Atas
+            // --- Tombol Navigasi Cepat ---
             Row(
               children: [
-                Expanded(child: _buildUpperButton("Your Order")),
+                Expanded(
+                  child: _buildUpperButton(
+                    "Your Order",
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const MyOrderScreen()),
+                    ),
+                  ),
+                ),
                 const SizedBox(width: 10),
-                Expanded(child: _buildUpperButton("Wishlist")),
+                Expanded(
+                  child: _buildUpperButton(
+                    "Wishlist",
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const WishlistPage()),
+                    ),
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 10),
@@ -96,40 +133,67 @@ class _FootFlareProfileState extends State<FootFlareProfile> {
                 Expanded(
                   child: _buildUpperButton(
                     "Coupons",
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const CouponsPage()),
-                      );
-                    },
+                    onTap: () => Navigator.push(
+                        context, MaterialPageRoute(builder: (context) => const CouponsPage())),
                   ),
                 ),
                 const SizedBox(width: 10),
-                Expanded(child: _buildUpperButton("Track Order")),
+                Expanded(
+                  child: _buildUpperButton(
+                    "Track Order",
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TrackOrderScreen(
+                          item: {
+                            'name': 'Swift Glide Sprinter Soles',
+                            'price': '199',
+                            'image': 'assets/images/pic1.png',
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
             
             const SizedBox(height: 35),
-            const Text(
-              "Account Settings",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Jost'),
-            ),
+            const Text("Account Settings",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Jost')),
             const SizedBox(height: 10),
             
             _buildMenuTile(Icons.person_outline, "Edit Profile", isEditProfile: true),
-            _buildMenuTile(Icons.account_balance_wallet_outlined, "Saved Cards & Wallet"),
-            _buildMenuTile(Icons.location_on_outlined, "Saved Addresses"),
+            
+            _buildMenuTile(Icons.account_balance_wallet_outlined, "Saved Cards & Wallet", 
+              onTap: () => Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => const PaymentScreen())
+              )
+            ),
+            
+            _buildMenuTile(Icons.location_on_outlined, "Saved Addresses", 
+              onTap: () => Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => const AddAddressScreen())
+              )
+            ),
+            
             _buildMenuTile(Icons.translate, selectedLanguage, isLanguage: true),
-            _buildMenuTile(Icons.notifications_none_outlined, "Notifications Settings"),
-            _buildMenuTile(Icons.logout, "Logout", isLogout: true),
+            
+            _buildMenuTile(Icons.notifications_none_outlined, "Notifications Settings",
+              onTap: () => Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => const NotificationPage())
+              )
+            ),
+            
+            // Tombol Logout Telah Dihapus dari Sini
             
             const SizedBox(height: 25),
-            const Text(
-              "My Activity",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Jost'),
-            ),
+            const Text("My Activity",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Jost')),
             const SizedBox(height: 10),
-            
             _buildMenuTile(Icons.star_outline, "Reviews"),
             _buildMenuTile(Icons.message_outlined, "FAQ"),
             const SizedBox(height: 40),
@@ -139,19 +203,15 @@ class _FootFlareProfileState extends State<FootFlareProfile> {
     );
   }
 
-  // Helper untuk membuat tombol kotak di AppBar
   Widget _buildSquareButton(IconData icon, {double size = 20}) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFFF7F7F7),
-        borderRadius: BorderRadius.circular(10),
-      ),
+          color: const Color(0xFFF7F7F7), borderRadius: BorderRadius.circular(10)),
       padding: const EdgeInsets.all(8),
       child: Icon(icon, color: Colors.black, size: size),
     );
   }
 
-  // Helper untuk tombol lonjong (Orders, Wishlist, dll)
   Widget _buildUpperButton(String label, {VoidCallback? onTap}) {
     return InkWell(
       onTap: onTap,
@@ -159,50 +219,35 @@ class _FootFlareProfileState extends State<FootFlareProfile> {
       child: Container(
         height: 55,
         decoration: BoxDecoration(
-          color: const Color(0xFFF6F6F6),
-          borderRadius: BorderRadius.circular(10),
-        ),
+            color: const Color(0xFFF6F6F6), borderRadius: BorderRadius.circular(10)),
         alignment: Alignment.center,
-        child: Text(
-          label,
-          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, fontFamily: 'Jost'),
-        ),
+        child: Text(label,
+            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, fontFamily: 'Jost')),
       ),
     );
   }
 
-  // Helper untuk baris menu pengaturan
-  Widget _buildMenuTile(IconData icon, String title, 
-      {bool isEditProfile = false, bool isLanguage = false, bool isLogout = false}) {
+  Widget _buildMenuTile(IconData icon, String title,
+      {bool isEditProfile = false, bool isLanguage = false, VoidCallback? onTap}) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      leading: Icon(icon, color: isLogout ? Colors.red : Colors.black, size: 24),
-      title: Text(
-        title,
-        style: TextStyle(
-          fontSize: 15, 
-          fontWeight: FontWeight.w500,
-          fontFamily: 'Jost',
-          color: isLogout ? Colors.red : Colors.black,
-        ),
-      ),
+      leading: Icon(icon, color: Colors.black, size: 24),
+      title: Text(title,
+          style: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
+              fontFamily: 'Jost',
+              color: Colors.black)),
       trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.black),
-      onTap: () {
+      onTap: onTap ?? () {
         if (isEditProfile) {
-          Navigator.push(
-            context, 
-            MaterialPageRoute(builder: (context) => const EditProfilePage())
-          );
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const EditProfilePage()));
         } else if (isLanguage) {
-          LanguageModal.show(context, (languageName) {
-            setState(() => selectedLanguage = languageName);
-          });
+          LanguageModal.show(context, (val) => setState(() => selectedLanguage = val));
         } else if (title == "Reviews") {
           Navigator.push(context, MaterialPageRoute(builder: (context) => const WriteReviewPage()));
         } else if (title == "FAQ") {
           Navigator.push(context, MaterialPageRoute(builder: (context) => const FaqPage()));
-        } else if (isLogout) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Logged out successfully")));
         }
       },
     );
@@ -222,14 +267,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage() async {
-    try {
-      final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-      if (pickedFile != null) {
-        setState(() => _imageFile = File(pickedFile.path));
-      }
-    } catch (e) {
-      debugPrint("Error picking image: $e");
-    }
+    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) setState(() => _imageFile = File(pickedFile.path));
   }
 
   @override
@@ -240,16 +279,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
-        title: const Text('Edit Profile', style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Jost')),
+        title: const Text('Edit Profile',
+            style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Jost', color: Colors.black)),
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: GestureDetector(
             onTap: () => Navigator.pop(context),
             child: Container(
               decoration: BoxDecoration(
-                color: const Color(0xFFF7F7F7),
-                borderRadius: BorderRadius.circular(10),
-              ),
+                  color: const Color(0xFFF7F7F7), borderRadius: BorderRadius.circular(10)),
               child: const Icon(Icons.arrow_back_ios_new, size: 18, color: Colors.black),
             ),
           ),
@@ -272,25 +310,27 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           backgroundColor: Colors.grey.shade200,
                           backgroundImage: _imageFile != null
                               ? FileImage(_imageFile!)
-                              : const NetworkImage('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCylXFV0XklUkisnNXZkn65Z1u6JSwEOopEA&s') as ImageProvider,
+                              : const AssetImage('assets/images/wajahAmel.png') as ImageProvider,
                         ),
                         GestureDetector(
                           onTap: _pickImage,
-                          child: Container(
-                            height: 35, width: 35,
-                            decoration: const BoxDecoration(color: Colors.black, shape: BoxShape.circle),
-                            child: const Icon(Icons.camera_alt, color: Colors.white, size: 18),
+                          child: const CircleAvatar(
+                            radius: 18,
+                            backgroundColor: Colors.black,
+                            child: Icon(Icons.camera_alt, color: Colors.white, size: 18),
                           ),
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 40),
-                  _buildInputField(label: "Full Name", initialValue: "Ada Wong"),
+                  _buildOutlineField(Icons.person_outline, "Full Name", "Amelia"),
                   const SizedBox(height: 15),
-                  _buildInputField(label: "Email", initialValue: "ada.wong@example.com"),
+                  _buildOutlineField(Icons.mail_outline, "Email", "amelia@example.com"),
                   const SizedBox(height: 15),
-                  _buildInputField(label: "Phone Number", initialValue: "+62 812 3456 789"),
+                  _buildOutlineField(Icons.phone_outlined, "Phone Number", "+62 812..."),
+                  const SizedBox(height: 15),
+                  _buildOutlineField(Icons.location_on_outlined, "Location", "Yogyakarta, Indonesia"),
                 ],
               ),
             ),
@@ -306,7 +346,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   backgroundColor: Colors.black,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                child: const Text("Update Profile", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                child: const Text("Update Profile",
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold, fontFamily: 'Jost')),
               ),
             ),
           ),
@@ -315,14 +357,34 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget _buildInputField({required String label, String? initialValue}) {
-    return TextFormField(
-      initialValue: initialValue,
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: const TextStyle(fontFamily: 'Jost', color: Colors.grey),
-        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey.shade300)),
-        focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+  Widget _buildOutlineField(IconData icon, String label, String initialValue) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade300),
+      ),
+      child: IntrinsicHeight(
+        child: Row(
+          children: [
+            SizedBox(width: 50, child: Icon(icon, color: Colors.black, size: 22)),
+            VerticalDivider(width: 1, thickness: 1, color: Colors.grey.shade300),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                child: TextFormField(
+                  initialValue: initialValue,
+                  style: const TextStyle(fontFamily: 'Jost', fontWeight: FontWeight.w600),
+                  decoration: InputDecoration(
+                    labelText: label,
+                    labelStyle: const TextStyle(color: Colors.grey, fontSize: 12),
+                    border: InputBorder.none,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,55 +1,47 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
-class EditProfilePage extends StatefulWidget {
-  const EditProfilePage({super.key});
+void main() => runApp(const MyApp());
 
-  @override
-  State<EditProfilePage> createState() => _EditProfilePageState();
-}
-
-class _EditProfilePageState extends State<EditProfilePage> {
-  File? _image;
-  final ImagePicker _picker = ImagePicker();
-
-  // Fungsi untuk mengambil gambar dari galeri
-  Future<void> _pickImage() async {
-    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
-    }
-  }
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final onSurface = Theme.of(context).colorScheme.onSurface;
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(useMaterial3: true),
+      home: const EditProfilePage(),
+    );
+  }
+}
 
+class EditProfilePage extends StatelessWidget {
+  const EditProfilePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: Colors.white,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF7F7F7),
+              color: const Color(0xFFF7F7F7),
               borderRadius: BorderRadius.circular(10),
             ),
             child: IconButton(
-              icon: Icon(Icons.arrow_back_ios_new, size: 18, color: onSurface),
+              icon: const Icon(Icons.arrow_back_ios_new, size: 18, color: Colors.black),
               onPressed: () => Navigator.pop(context),
             ),
           ),
         ),
         title: const Text(
           'Edit Profile',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Jost'),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
         ),
         centerTitle: true,
       ),
@@ -62,42 +54,32 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 children: [
                   const SizedBox(height: 30),
                   
-                  // Foto Profil dengan Fungsi Ganti Foto
+                  // Foto Profil dengan Ring dan Ikon Edit
                   Center(
                     child: Stack(
                       alignment: Alignment.bottomRight,
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(4),
+                          padding: const EdgeInsets.all(4), // Jarak ring putih
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            border: Border.all(color: onSurface, width: 1.5),
+                            border: Border.all(color: Colors.black, width: 1.5),
                           ),
-                          child: CircleAvatar(
+                          child: const CircleAvatar(
                             radius: 80,
-                            backgroundColor: Colors.grey.shade200,
-                            backgroundImage: _image != null 
-                                ? FileImage(_image!) as ImageProvider
-                                : const NetworkImage('https://i.pravatar.cc/300'),
+                            backgroundImage: NetworkImage('https://i.pravatar.cc/300'),
                           ),
                         ),
-                        // Tombol Edit
-                        GestureDetector(
-                          onTap: _pickImage,
-                          child: Container(
-                            height: 40,
-                            width: 40,
-                            decoration: BoxDecoration(
-                              color: isDark ? Colors.white : Colors.black,
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Theme.of(context).scaffoldBackgroundColor, width: 3),
-                            ),
-                            child: Icon(
-                              Icons.edit_outlined, 
-                              color: isDark ? Colors.black : Colors.white, 
-                              size: 20
-                            ),
+                        // Tombol Pensil/Edit
+                        Container(
+                          height: 40,
+                          width: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 3),
                           ),
+                          child: const Icon(Icons.edit_outlined, color: Colors.white, size: 20),
                         ),
                       ],
                     ),
@@ -105,62 +87,52 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   
                   const SizedBox(height: 40),
 
+                  // Form Inputs
                   _buildInputField(
-                    context: context,
-                    icon: Icons.person_outline, 
+                    icon: Icons.lock_outline, 
                     label: "Name", 
-                    initialValue: "Rifki Alfaris" // Nama kamu sebagai default
+                    initialValue: "Ada Wong"
                   ),
                   const SizedBox(height: 15),
                   _buildInputField(
-                    context: context,
                     icon: Icons.mail_outline, 
                     label: "Email Address", 
-                    hint: "rifki@example.com"
+                    hint: "Email Address"
                   ),
                   const SizedBox(height: 15),
                   _buildInputField(
-                    context: context,
                     icon: Icons.phone_outlined, 
                     label: "Mobile Number", 
-                    hint: "+62 812 3456 789"
+                    hint: "Mobile Number"
                   ),
                   const SizedBox(height: 15),
                   _buildInputField(
-                    context: context,
-                    icon: Icons.location_on_outlined, 
+                    icon: Icons.location_on, 
                     label: "Location", 
-                    hint: "Yogyakarta, Indonesia"
+                    hint: "Location"
                   ),
                 ],
               ),
             ),
           ),
 
-          // Bottom Button
+          // Bottom Button (Update Profile)
           Padding(
             padding: const EdgeInsets.all(25.0),
             child: SizedBox(
               width: double.infinity,
               height: 60,
               child: ElevatedButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Profile Updated!")),
-                  );
-                },
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: isDark ? Colors.white : Colors.black,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-                child: Text(
-                  "Update Profile",
-                  style: TextStyle(
-                    color: isDark ? Colors.black : Colors.white, 
-                    fontSize: 18, 
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Jost'
+                  backgroundColor: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
+                ),
+                child: const Text(
+                  "Update Profile",
+                  style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -170,45 +142,40 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget _buildInputField({
-    required BuildContext context, 
-    required IconData icon, 
-    required String label, 
-    String? initialValue, 
-    String? hint
-  }) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final onSurface = Theme.of(context).colorScheme.onSurface;
-
+  // Widget Helper untuk Input Field
+  Widget _buildInputField({required IconData icon, required String label, String? initialValue, String? hint}) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: isDark ? Colors.grey.shade800 : Colors.grey.shade300),
+        border: Border.all(color: Colors.grey.shade300),
       ),
       child: Row(
         children: [
+          // Bagian Ikon
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Icon(icon, color: onSurface, size: 24),
+            child: Icon(icon, color: Colors.black, size: 24),
           ),
+          // Garis Vertikal Pemisah
           Container(
             height: 60,
             width: 1,
-            color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
+            color: Colors.grey.shade300,
           ),
+          // Bagian Input
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: TextFormField(
                 initialValue: initialValue,
-                style: TextStyle(fontFamily: 'Jost', color: onSurface),
                 decoration: InputDecoration(
                   labelText: label,
-                  labelStyle: TextStyle(color: Colors.grey.shade500, fontSize: 14, fontFamily: 'Jost'),
+                  labelStyle: TextStyle(color: Colors.grey.shade500, fontSize: 14),
                   hintText: hint,
-                  hintStyle: const TextStyle(fontFamily: 'Jost'),
                   border: InputBorder.none,
+                  floatingLabelBehavior: FloatingLabelBehavior.auto,
                 ),
+                style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
               ),
             ),
           ),
