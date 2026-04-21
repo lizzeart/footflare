@@ -1,71 +1,173 @@
 import 'package:flutter/material.dart';
+import '../main_screen.dart';
 
-class SearchPage extends StatelessWidget {
+class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
 
   @override
+  State<SearchPage> createState() =>
+      _SearchPageState();
+}
+
+class _SearchPageState
+    extends State<SearchPage> {
+  int selectedCategory = 0;
+
+  final List<String> cats = [
+    'All',
+    'Child',
+    'Man',
+    'Woman',
+    'Unisex',
+  ];
+
+  @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark =
+        Theme.of(context).brightness ==
+            Brightness.dark;
 
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding:
+              const EdgeInsets.all(20),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment:
+                CrossAxisAlignment
+                    .start,
             children: [
               Row(
                 children: [
                   GestureDetector(
-                    onTap: () => Navigator.pop(context),
+                    onTap: () =>
+                        Navigator.pop(
+                            context),
                     child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(color: isDark ? Colors.white : Colors.black, borderRadius: BorderRadius.circular(12)),
-                      child: Icon(Icons.arrow_back_ios_new, color: isDark ? Colors.black : Colors.white, size: 20),
+                      padding:
+                          const EdgeInsets.all(
+                              12),
+                      decoration:
+                          BoxDecoration(
+                        color: isDark
+                            ? Colors.white
+                            : Colors.black,
+                        borderRadius:
+                            BorderRadius
+                                .circular(
+                                    12),
+                      ),
+                      child: Icon(
+                        Icons
+                            .arrow_back_ios_new,
+                        color: isDark
+                            ? Colors.black
+                            : Colors.white,
+                        size: 20,
+                      ),
                     ),
                   ),
-                  const SizedBox(width: 12),
+
+                  const SizedBox(
+                      width: 12),
+
                   Expanded(
                     child: TextField(
-                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
-                      decoration: InputDecoration(
-                        hintText: 'Search Best items for You',
-                        hintStyle: TextStyle(color: Colors.grey.shade500),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: isDark ? Colors.grey.shade800 : Colors.grey.shade300)),
-                        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: isDark ? Colors.grey.shade800 : Colors.grey.shade300)),
-                        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: isDark ? Colors.white : Colors.black)),
-                        filled: true,
-                        fillColor: isDark ? const Color(0xFF2A2D3A) : Colors.white,
+                      decoration:
+                          InputDecoration(
+                        hintText:
+                            'Search Best items for You',
+                        border:
+                            OutlineInputBorder(
+                          borderRadius:
+                              BorderRadius.circular(
+                                  12),
+                        ),
                       ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 30),
-              Text('Categories', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface)),
-              const SizedBox(height: 16),
-              _buildCategories(context, isDark),
-              const SizedBox(height: 30),
+
+              const SizedBox(
+                  height: 30),
+
+              Text(
+                'Categories',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight:
+                      FontWeight.bold,
+                  color: Theme.of(
+                          context)
+                      .colorScheme
+                      .onSurface,
+                ),
+              ),
+
+              const SizedBox(
+                  height: 16),
+
+              _buildCategories(
+                  context, isDark),
+
+              const SizedBox(
+                  height: 30),
+
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment:
+                    MainAxisAlignment
+                        .spaceBetween,
                 children: [
-                  Text('Search History', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface)),
-                  Text('Clear All', style: TextStyle(fontSize: 14, decoration: TextDecoration.underline, color: Colors.grey.shade600)),
+                  Text(
+                    'Search History',
+                    style:
+                        TextStyle(
+                      fontSize:
+                          18,
+                      fontWeight:
+                          FontWeight
+                              .bold,
+                    ),
+                  ),
+                  Text(
+                    'Clear All',
+                    style:
+                        TextStyle(
+                      fontSize:
+                          14,
+                      decoration:
+                          TextDecoration
+                              .underline,
+                    ),
+                  ),
                 ],
               ),
-              const SizedBox(height: 16),
+
+              const SizedBox(
+                  height: 16),
+
               Expanded(
                 child: ListView(
                   children: [
-                    _buildHistoryItem(context, 'Woman Fashion Shoes'),
-                    _buildHistoryItem(context, 'Man Shoes'),
-                    _buildHistoryItem(context, 'Girl Shoes'),
-                    _buildHistoryItem(context, 'Shorts Shoes'),
-                    _buildHistoryItem(context, 'Shorts'),
+                    _buildHistoryItem(
+                        context,
+                        'Woman Fashion Shoes'),
+                    _buildHistoryItem(
+                        context,
+                        'Man Shoes'),
+                    _buildHistoryItem(
+                        context,
+                        'Girl Shoes'),
+                    _buildHistoryItem(
+                        context,
+                        'Shorts Shoes'),
+                    _buildHistoryItem(
+                        context,
+                        'Shorts'),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -73,43 +175,153 @@ class SearchPage extends StatelessWidget {
     );
   }
 
-  Widget _buildCategories(BuildContext context, bool isDark) {
-    final cats = ['All', 'Child', 'Man', 'Woman', 'Unisex'];
+  Widget _buildCategories(
+      BuildContext context,
+      bool isDark) {
     return SizedBox(
-      height: 40,
+      height: 42,
       child: ListView.builder(
-        scrollDirection: Axis.horizontal,
+        scrollDirection:
+            Axis.horizontal,
         itemCount: cats.length,
-        itemBuilder: (context, index) {
-          bool isActive = index == 0;
-          return Container(
-            margin: const EdgeInsets.only(right: 10),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            decoration: BoxDecoration(
-              color: isActive ? (isDark ? Colors.white : Colors.black) : (isDark ? const Color(0xFF2A2D3A) : Colors.grey.shade100),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Center(
-              child: Text(
-                cats[index], 
-                style: TextStyle(color: isActive ? (isDark ? Colors.black : Colors.white) : (isDark ? Colors.white70 : Colors.black), fontWeight: FontWeight.w500)
-              ),
-            ),
+        itemBuilder:
+            (context, index) {
+          return _HoverCategoryItem(
+            text: cats[index],
+            active:
+                selectedCategory ==
+                    index,
+            onTap: () {
+              setState(() {
+                selectedCategory =
+                    index;
+              });
+
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (_) =>
+                      const MainScreen(
+                    initialIndex: 3,
+                  ),
+                ),
+              );
+            },
           );
         },
       ),
     );
   }
 
-  Widget _buildHistoryItem(BuildContext context, String title) {
+  Widget _buildHistoryItem(
+      BuildContext context,
+      String title) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
+      padding:
+          const EdgeInsets.only(
+              bottom: 20),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment:
+            MainAxisAlignment
+                .spaceBetween,
         children: [
-          Text(title, style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurface)),
-          const Icon(Icons.close, color: Colors.grey, size: 20),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 16,
+              color: Theme.of(
+                      context)
+                  .colorScheme
+                  .onSurface,
+            ),
+          ),
+          const Icon(
+            Icons.close,
+            color: Colors.grey,
+            size: 20,
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class _HoverCategoryItem
+    extends StatefulWidget {
+  final String text;
+  final bool active;
+  final VoidCallback onTap;
+
+  const _HoverCategoryItem({
+    required this.text,
+    required this.active,
+    required this.onTap,
+  });
+
+  @override
+  State<_HoverCategoryItem>
+      createState() =>
+          _HoverCategoryItemState();
+}
+
+class _HoverCategoryItemState
+    extends State<_HoverCategoryItem> {
+  bool hover = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final active =
+        widget.active || hover;
+
+    return MouseRegion(
+      onEnter: (_) {
+        setState(() {
+          hover = true;
+        });
+      },
+      onExit: (_) {
+        setState(() {
+          hover = false;
+        });
+      },
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration:
+              const Duration(
+                  milliseconds:
+                      250),
+          margin:
+              const EdgeInsets.only(
+                  right: 10),
+          padding:
+              const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 10,
+          ),
+          decoration:
+              BoxDecoration(
+            color: active
+                ? Colors.black
+                : Colors.grey
+                    .shade100,
+            borderRadius:
+                BorderRadius
+                    .circular(8),
+          ),
+          child: Center(
+            child: Text(
+              widget.text,
+              style: TextStyle(
+                color: active
+                    ? Colors.white
+                    : Colors.black,
+                fontWeight:
+                    FontWeight.w500,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

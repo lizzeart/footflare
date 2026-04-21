@@ -45,26 +45,72 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     return Scaffold(
       backgroundColor: bgColor,
 
+      // ================= APPBAR =================
+      // ================= APP BAR =================
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: Icon(
-            Icons.arrow_back_ios_new,
+
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                Icons.arrow_back_ios_new,
+                size: 16,
+                color: iconColor,
+              ),
+            ),
+          ),
+        ),
+
+        title: Text(
+          "Product Details",
+          style: TextStyle(
+            fontFamily: 'Jost',
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
             color: iconColor,
           ),
         ),
-        title: const Text(
-          "Product Details",
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 16,
-          ),
-        ),
-      ),
 
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => CartScreen(),
+                  ),
+                );
+              },
+              child: Container(
+                width: 42,
+                height: 42, // samakan tinggi
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.shopping_cart_outlined,
+                  size: 18,
+                  color: iconColor,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+        ],
+
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -73,13 +119,14 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment:
+                    CrossAxisAlignment.start,
                 children: [
                   Text(
                     widget.product['name'],
                     style: const TextStyle(
                       fontSize: 22,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
 
@@ -97,42 +144,58 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   Wrap(
                     spacing: 10,
                     runSpacing: 10,
-                    children: List.generate(_sizes.length, (index) {
-                      final selected =
-                          _selectedSizeIndex == index;
+                    children: List.generate(
+                      _sizes.length,
+                      (index) {
+                        final selected =
+                            _selectedSizeIndex ==
+                                index;
 
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _selectedSizeIndex = index;
-                          });
-                        },
-                        child: AnimatedContainer(
-                          duration:
-                              const Duration(milliseconds: 200),
-                          width: 45,
-                          height: 45,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: selected
-                                ? Colors.black
-                                : Colors.grey.shade200,
-                            borderRadius:
-                                BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            _sizes[index],
-                            style: TextStyle(
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedSizeIndex =
+                                  index;
+                            });
+                          },
+                          child: AnimatedContainer(
+                            duration:
+                                const Duration(
+                                    milliseconds:
+                                        200),
+                            width: 45,
+                            height: 45,
+                            alignment:
+                                Alignment.center,
+                            decoration:
+                                BoxDecoration(
                               color: selected
-                                  ? Colors.white
-                                  : Colors.black,
-                              fontWeight:
-                                  FontWeight.bold,
+                                  ? Colors.black
+                                  : Colors.grey
+                                      .shade200,
+                              borderRadius:
+                                  BorderRadius
+                                      .circular(
+                                          8),
+                            ),
+                            child: Text(
+                              _sizes[index],
+                              style:
+                                  TextStyle(
+                                color: selected
+                                    ? Colors
+                                        .white
+                                    : Colors
+                                        .black,
+                                fontWeight:
+                                    FontWeight
+                                        .w400,
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    }),
+                        );
+                      },
+                    ),
                   ),
 
                   const SizedBox(height: 25),
@@ -160,7 +223,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         ),
       ),
 
-      // BOTTOM BAR
+      // ================= BOTTOM BAR =================
       bottomNavigationBar: Container(
         padding: const EdgeInsets.symmetric(
           horizontal: 20,
@@ -181,44 +244,42 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
               Row(
                 children: [
-                  /// LOVE BUTTON
+                  // LOVE BUTTON
                   GestureDetector(
                     onTap: () {
                       setState(() {
-                        isFavorite = !isFavorite;
+                        isFavorite =
+                            !isFavorite;
                       });
                     },
                     child: AnimatedScale(
-                      duration: const Duration(
-                          milliseconds: 180),
-                      scale: isFavorite ? 1.08 : 1,
-                      child: AnimatedContainer(
-                        duration: const Duration(
-                            milliseconds: 220),
-                        curve: Curves.easeInOut,
+                      duration:
+                          const Duration(
+                              milliseconds:
+                                  180),
+                      scale:
+                          isFavorite
+                              ? 1.08
+                              : 1,
+                      child:
+                          AnimatedContainer(
+                        duration:
+                            const Duration(
+                                milliseconds:
+                                    220),
                         width: 42,
                         height: 42,
-                        decoration: BoxDecoration(
+                        decoration:
+                            BoxDecoration(
                           color: isFavorite
                               ? const Color(
                                   0xFFFF375F)
                               : const Color(
                                   0xFFF2F2F2),
                           borderRadius:
-                              BorderRadius.circular(8),
-                          boxShadow: isFavorite
-                              ? [
-                                  BoxShadow(
-                                    color: Colors.red
-                                        .withOpacity(
-                                            0.20),
-                                    blurRadius: 8,
-                                    offset:
-                                        const Offset(
-                                            0, 3),
-                                  ),
-                                ]
-                              : [],
+                              BorderRadius
+                                  .circular(
+                                      8),
                         ),
                         child: Icon(
                           Icons.favorite,
@@ -233,7 +294,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
                   const SizedBox(width: 12),
 
-                  /// ADD TO CART
+                  // ADD TO CART
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
@@ -250,26 +311,34 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                           const EdgeInsets.symmetric(
                         horizontal: 20,
                       ),
-                      decoration: BoxDecoration(
+                      decoration:
+                          BoxDecoration(
                         color: Colors.black,
                         borderRadius:
-                            BorderRadius.circular(8),
+                            BorderRadius
+                                .circular(
+                                    8),
                       ),
                       child: Row(
                         children: const [
                           Icon(
                             Icons
                                 .shopping_cart_outlined,
-                            color: Colors.white,
+                            color: Colors
+                                .white,
                             size: 18,
                           ),
-                          SizedBox(width: 8),
+                          SizedBox(
+                              width: 8),
                           Text(
                             "Add To Cart",
-                            style: TextStyle(
-                              color: Colors.white,
+                            style:
+                                TextStyle(
+                              color: Colors
+                                  .white,
                               fontWeight:
-                                  FontWeight.w600,
+                                  FontWeight
+                                      .w600,
                             ),
                           ),
                         ],
@@ -285,6 +354,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     );
   }
 
+  // ================= IMAGE =================
   Widget _buildImageGallery() {
     final List<String> thumbnails = [
       widget.product['image'],
@@ -301,18 +371,84 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         children: [
           Positioned.fill(
             child: Image.asset(
-              thumbnails[_selectedThumbnailIndex],
+              thumbnails[
+                  _selectedThumbnailIndex],
               fit: BoxFit.cover,
             ),
           ),
 
+          // KEMBALIKAN PILIHAN WARNA
+          Positioned(
+            top: 20,
+            left: 20,
+            child: Column(
+              children: List.generate(
+                _colors.length,
+                (index) {
+                  final selected =
+                      _selectedColorIndex ==
+                          index;
+
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _selectedColorIndex =
+                            index;
+                      });
+                    },
+                    child: Container(
+                      margin:
+                          const EdgeInsets.only(
+                              bottom: 12),
+                      width: 24,
+                      height: 24,
+                      decoration:
+                          BoxDecoration(
+                        shape:
+                            BoxShape.circle,
+                        border: Border.all(
+                          color: selected
+                              ? Colors.black
+                              : Colors
+                                  .transparent,
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Center(
+                        child: Container(
+                          width: 18,
+                          height: 18,
+                          decoration:
+                              BoxDecoration(
+                            shape: BoxShape
+                                .circle,
+                            color: _colors[
+                                        index] ==
+                                    Colors
+                                        .transparent
+                                ? const Color(
+                                    0xFFDCDCDC)
+                                : _colors[
+                                    index],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+
+          // THUMBNAIL BAWAH
           Positioned(
             bottom: 20,
             left: 0,
             right: 0,
             child: Row(
               mainAxisAlignment:
-                  MainAxisAlignment.center,
+                  MainAxisAlignment
+                      .center,
               children: List.generate(
                 thumbnails.length,
                 (index) {
@@ -333,23 +469,31 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                               horizontal: 6),
                       width: 50,
                       height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
+                      decoration:
+                          BoxDecoration(
+                        color:
+                            Colors.white,
                         borderRadius:
-                            BorderRadius.circular(8),
-                        border: Border.all(
+                            BorderRadius
+                                .circular(
+                                    8),
+                        border:
+                            Border.all(
                           color: selected
                               ? Colors.red
-                              : Colors.transparent,
+                              : Colors
+                                  .transparent,
                           width: 1.5,
                         ),
                       ),
                       child: Padding(
                         padding:
-                            const EdgeInsets.all(4),
+                            const EdgeInsets.all(
+                                4),
                         child: Image.asset(
                           thumbnails[index],
-                          fit: BoxFit.contain,
+                          fit: BoxFit
+                              .contain,
                         ),
                       ),
                     ),
