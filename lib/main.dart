@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'presentation/home/home_page.dart';
 // --- TAMBAHKAN IMPORT INI ---
 import 'presentation/main_screen.dart';
+import 'presentation/auth/splash_screen.dart';
 
 // Variabel global untuk mengatur tema
 final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
@@ -72,7 +73,7 @@ class FootFlareApp extends StatelessWidget {
           ),
 
           // Mengarahkan ke MainScreen agar Navbar muncul
-          home: const MainScreen(),
+          home: const SplashScreen(),
         );
       },
     );
