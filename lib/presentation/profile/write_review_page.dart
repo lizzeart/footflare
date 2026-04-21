@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+// Pastikan path ini sesuai dengan struktur folder proyek Footflare kamu
+import 'package:footflare/presentation/order/my_order_screen.dart';
+import 'package:footflare/presentation/product_detail/product_detail_page.dart';
 
 class WriteReviewPage extends StatefulWidget {
   const WriteReviewPage({super.key});
@@ -8,11 +11,14 @@ class WriteReviewPage extends StatefulWidget {
 }
 
 class _WriteReviewPageState extends State<WriteReviewPage> {
-  // State untuk rating bintang
   int _currentRating = 4;
-  
-  // State untuk rekomendasi produk
   bool _isRecommended = true;
+
+  final Map<String, dynamic> productData = {
+    "name": "Echo Vibe Urban Runners",
+    "price": "\$179",
+    "image": "assets/images/shoe1.png", 
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +44,7 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
         title: const Text(
           'Write Review',
           style: TextStyle(
-            fontWeight: FontWeight.bold, 
+            fontWeight: FontWeight.bold,
             color: Colors.black,
             fontFamily: 'Jost',
           ),
@@ -66,8 +72,8 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
                       color: const Color(0xFFF7F7F7),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Image.network(
-                      'https://footflare-bootstrap-pwa.vercel.app/assets/images/product/product1/pic1.png',
+                    child: Image.asset(
+                      productData['image'],
                       fit: BoxFit.contain,
                     ),
                   ),
@@ -76,10 +82,10 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          "Echo Vibe Urban Runners",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold, 
+                        Text(
+                          productData['name'],
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
                             fontSize: 16,
                             fontFamily: 'Jost',
                           ),
@@ -87,10 +93,10 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
                         const SizedBox(height: 5),
                         Row(
                           children: [
-                            const Text(
-                              "\$179",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold, 
+                            Text(
+                              productData['price'],
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
                                 fontSize: 18,
                                 fontFamily: 'Jost',
                               ),
@@ -99,8 +105,8 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
                             Text(
                               "FREE Delivery",
                               style: TextStyle(
-                                color: Colors.green.shade600, 
-                                fontWeight: FontWeight.w500, 
+                                color: Colors.green.shade600,
+                                fontWeight: FontWeight.w500,
                                 fontSize: 12,
                                 fontFamily: 'Jost',
                               ),
@@ -111,8 +117,8 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
                         const Text(
                           "40% Off",
                           style: TextStyle(
-                            color: Colors.red, 
-                            fontWeight: FontWeight.w500, 
+                            color: Colors.red,
+                            fontWeight: FontWeight.w500,
                             fontSize: 14,
                             fontFamily: 'Jost',
                           ),
@@ -120,13 +126,23 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
                       ],
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF7F7F7),
-                      borderRadius: BorderRadius.circular(8),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProductDetailPage(product: productData),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF7F7F7),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.arrow_forward, size: 20),
                     ),
-                    child: const Icon(Icons.arrow_forward, size: 20),
                   )
                 ],
               ),
@@ -140,7 +156,7 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
             const Text(
               "Overall Rating",
               style: TextStyle(
-                fontSize: 24, 
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Jost',
               ),
@@ -149,7 +165,7 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
             Text(
               "Your Average Rating Is ${_currentRating.toDouble()}",
               style: const TextStyle(
-                color: Colors.grey, 
+                color: Colors.grey,
                 fontSize: 15,
                 fontFamily: 'Jost',
               ),
@@ -166,7 +182,7 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
                   },
                   child: Icon(
                     index < _currentRating ? Icons.star : Icons.star_border,
-                    color: const Color(0xFFE91E63), // Warna Pinkish-red
+                    color: const Color(0xFFE91E63),
                     size: 45,
                   ),
                 );
@@ -175,24 +191,20 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
 
             const SizedBox(height: 30),
 
-            // --- Input Forms ---
             _buildInputLabel("Review Title"),
             _buildTextField(hint: "Enter your review title"),
-            
             const SizedBox(height: 20),
-            
             _buildInputLabel("Product Review"),
             _buildTextField(hint: "Write your experience with this product", maxLines: 4),
 
             const SizedBox(height: 25),
 
-            // --- Recommendation Section ---
             const Align(
               alignment: Alignment.centerLeft,
               child: Text(
                 "Would you recommend this product to a friend?",
                 style: TextStyle(
-                  fontWeight: FontWeight.w500, 
+                  fontWeight: FontWeight.w500,
                   fontSize: 15,
                   fontFamily: 'Jost',
                 ),
@@ -212,16 +224,20 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 40),
-            
-            // --- Submit Button ---
+
+            // --- SUBMIT BUTTON ---
             SizedBox(
               width: double.infinity,
               height: 60,
               child: ElevatedButton(
                 onPressed: () {
-                  // Tambahkan aksi kirim review di sini
+                  // PERBAIKAN DI SINI: Gunakan push biasa agar stack tidak hilang
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const MyOrderScreen()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
@@ -231,8 +247,8 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
                 child: const Text(
                   "Submit Review",
                   style: TextStyle(
-                    color: Colors.white, 
-                    fontSize: 16, 
+                    color: Colors.white,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Jost',
                   ),
@@ -247,7 +263,6 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
   }
 
   // --- Helper Widgets ---
-
   Widget _buildInputLabel(String label) {
     return Align(
       alignment: Alignment.centerLeft,
@@ -256,7 +271,7 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
         child: Text(
           label,
           style: const TextStyle(
-            fontWeight: FontWeight.bold, 
+            fontWeight: FontWeight.bold,
             fontSize: 15,
             fontFamily: 'Jost',
           ),
@@ -268,25 +283,16 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
   Widget _buildTextField({required String hint, int maxLines = 1}) {
     return TextField(
       maxLines: maxLines,
-      style: const TextStyle(fontFamily: 'Jost'),
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: const TextStyle(color: Colors.grey, fontSize: 14),
-        contentPadding: const EdgeInsets.all(15),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: const Color(0xFFF7F7F7),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFFEEEEEE)),
+          borderSide: BorderSide.none,
         ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFFEEEEEE)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.black),
-        ),
+        contentPadding: const EdgeInsets.all(16),
       ),
     );
   }
@@ -295,32 +301,31 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
     return Row(
       children: [
         Container(
-          width: 24,
-          height: 24,
+          width: 20,
+          height: 20,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
-              color: isSelected ? Colors.black : const Color(0xFFCCCCCC), 
+              color: isSelected ? const Color(0xFFE91E63) : Colors.grey,
               width: 2,
             ),
           ),
           child: Center(
             child: Container(
-              width: 12,
-              height: 12,
+              width: 10,
+              height: 10,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: isSelected ? Colors.black : Colors.transparent,
+                color: isSelected ? const Color(0xFFE91E63) : Colors.transparent,
               ),
             ),
           ),
         ),
         const SizedBox(width: 10),
         Text(
-          label, 
+          label,
           style: const TextStyle(
-            fontSize: 16, 
-            fontWeight: FontWeight.w500,
+            fontSize: 16,
             fontFamily: 'Jost',
           ),
         ),
