@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../widgets/app_install_popup.dart';
 import 'widgets/home_app_bar.dart';
 import 'widgets/side_drawer.dart';
 import 'widgets/promo_banner.dart';
@@ -18,18 +17,10 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _showInstallPopup();
     });
   }
 
-  void _showInstallPopup() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (context) => const AppInstallPopup(),
-    );
-  }
+  
 
   @override
   Widget build(BuildContext context) {
