@@ -38,6 +38,9 @@ class _PromoBannerState extends State<PromoBanner> {
 
   @override
   Widget build(BuildContext context) {
+    // Mendeteksi mode tema
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
       height: 190, 
@@ -63,7 +66,7 @@ class _PromoBannerState extends State<PromoBanner> {
             ),
           ),
 
-          // --- 2. FOTO KAKI (ANIMASI MEMUDAR) ---
+          // --- 2. FOTO KAKI (ANIMASI MEMUDAR INFINITE LOOP) ---
           Positioned(
             right: 0, 
             top: 0, 
@@ -71,7 +74,6 @@ class _PromoBannerState extends State<PromoBanner> {
             child: AnimatedBuilder(
               animation: _pageController,
               builder: (context, child) {
-                // PERBAIKAN FATAL: Wajib cek haveDimensions agar tidak layar merah!
                 double page = _pageController.initialPage.toDouble();
                 if (_pageController.hasClients && _pageController.position.haveDimensions) {
                   page = _pageController.page!;
@@ -114,7 +116,6 @@ class _PromoBannerState extends State<PromoBanner> {
               return AnimatedBuilder(
                 animation: _pageController,
                 builder: (context, child) {
-                  // PERBAIKAN FATAL: Wajib cek haveDimensions untuk teks
                   double pageOffset = (_pageController.initialPage - index).toDouble();
                   if (_pageController.hasClients && _pageController.position.haveDimensions) {
                     pageOffset = _pageController.page! - index;
@@ -166,24 +167,49 @@ class _PromoBannerState extends State<PromoBanner> {
                           ),
                         ),
                         
+                        // --- TOMBOL SHOP NOW INTERAKTIF ---
                         Positioned(
                           left: 20 + buttonOffset,
                           bottom: 25,
                           child: Opacity(
                             opacity: opacity,
                             child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.black,
-                                foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                              style: ButtonStyle(
+                                padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 24, vertical: 12)),
+                                shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                                
+                                // LOGIKA WARNA BACKGROUND (Berubah saat diklik)
+                                backgroundColor: WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
+                                  if (states.contains(WidgetState.pressed)) {
+                                    return isDark ? Colors.black : Colors.white; // Saat tombol ditahan/diklik
+                                  }
+                                  return isDark ? Colors.white : Colors.black;   // Keadaan normal
+                                }),
+                                
+                                // LOGIKA WARNA TEKS (Berubah saat diklik)
+                                foregroundColor: WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
+                                  if (states.contains(WidgetState.pressed)) {
+                                    return isDark ? Colors.white : Colors.black; // Saat tombol ditahan/diklik
+                                  }
+                                  return isDark ? Colors.black : Colors.white;   // Keadaan normal
+                                }),
+
+                                // Tambahan garis border tipis saat mode terang agar tombol putih tidak menyatu dengan background
+                                side: WidgetStateProperty.resolveWith<BorderSide>((Set<WidgetState> states) {
+                                  if (!isDark && states.contains(WidgetState.pressed)) {
+                                    return const BorderSide(color: Colors.black, width: 1);
+                                  }
+                                  return BorderSide.none;
+                                }),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                // Aksi saat tombol ditekan (bisa ditambahkan navigasi ke halaman produk nanti)
+                              },
                               child: const Text(
                                 'Shop Now', 
                                 style: TextStyle(
                                   fontFamily: 'Jost',
-                                  fontWeight: FontWeight.w400 
+                                  fontWeight: FontWeight.w500 
                                 )
                               ),
                             ),
