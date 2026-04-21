@@ -2,11 +2,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:footflare/main.dart';
 
-// Import menggunakan Path Absolut
-import 'package:footflare/presentation/wishlist/wishlist_page.dart';
-import 'package:footflare/presentation/home/home_page.dart';
-import 'package:footflare/presentation/search/search_page.dart';
-import 'package:footflare/presentation/auth/splash_screen.dart';
+// --- Import Halaman MainScreen untuk navigasi ---
+// Pastikan path ini sesuai dengan lokasi file MainScreen kamu
+import 'package:footflare/presentation/main_screen.dart';
 
 class SideDrawer extends StatelessWidget {
   const SideDrawer({super.key});
@@ -33,12 +31,10 @@ class SideDrawer extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Tambahkan InkWell di sini untuk fungsi klik Profile
+                    // Header Profil (Bisa diklik untuk ke profil)
                     InkWell(
-                      onTap: () {
-                        Navigator.pop(context); // Tutup drawer
-                        // Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfilePage()));
-                      },
+                      onTap: () =>
+                          _navigateToPage(context, 4), // Index 4 adalah Profil
                       child: _buildProfileHeader(context, isDark),
                     ),
                     Divider(
@@ -51,53 +47,67 @@ class SideDrawer extends StatelessWidget {
                         padding: EdgeInsets.zero,
                         children: [
                           const SizedBox(height: 10),
-                          _buildMenuItem(context, Icons.home_outlined, 'Home'),
+                          _buildMenuItem(
+                            context,
+                            Icons.home_outlined,
+                            'Home',
+                            0,
+                          ),
                           _buildMenuItem(
                             context,
                             Icons.shopping_bag_outlined,
                             'Products',
+                            0,
                           ),
                           _buildMenuItem(
                             context,
                             Icons.grid_view_outlined,
                             'Components',
+                            0,
                           ),
                           _buildMenuItem(
                             context,
                             Icons.diamond_outlined,
                             'Pages',
+                            0,
                           ),
                           _buildMenuItem(
                             context,
                             Icons.star_border_outlined,
                             'Featured',
+                            0,
                           ),
                           _buildMenuItem(
                             context,
                             Icons.favorite_border,
                             'Wishlist',
+                            1,
                           ),
                           _buildMenuItem(
                             context,
                             Icons.receipt_long_outlined,
                             'Orders',
+                            0,
                           ),
                           _buildMenuItem(
                             context,
                             Icons.chat_bubble_outline,
                             'Chat List',
+                            0,
                           ),
                           _buildMenuItem(
                             context,
                             Icons.shopping_cart_outlined,
                             'My Cart',
+                            2,
                           ),
                           _buildMenuItem(
                             context,
                             Icons.person_outline,
                             'Profile',
+                            4,
                           ),
-                          _buildMenuItem(context, Icons.logout, 'Logout'),
+                          _buildMenuItem(context, Icons.logout, 'Logout', -1),
                         ],
                       ),
                     ),
@@ -121,6 +131,22 @@ class SideDrawer extends StatelessWidget {
     );
   }
 
+  // Fungsi helper untuk navigasi agar Nav Bar tetap ada
+  void _navigateToPage(BuildContext context, int index) {
+    Navigator.pop(context); // Tutup drawer
+    if (index == -1) {
+      // Logika Logout di sini jika perlu
+      return;
+    }
+
+    // Pindah ke MainScreen dengan index tertentu
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => MainScreen(initialIndex: index)),
+      (route) => false,
+    );
+  }
+
   Widget _buildProfileHeader(BuildContext context, bool isDark) {
     return Padding(
       padding: const EdgeInsets.all(20.0),
@@ -129,7 +155,7 @@ class SideDrawer extends StatelessWidget {
         children: [
           const CircleAvatar(
             radius: 25,
-            backgroundColor: Colors.transparent,
+            backgroundColor: Colors.grey,
             backgroundImage: AssetImage('assets/images/profil.png'),
           ),
           const SizedBox(width: 15),
@@ -139,7 +165,6 @@ class SideDrawer extends StatelessWidget {
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
                       'Amelia',
@@ -149,6 +174,7 @@ class SideDrawer extends StatelessWidget {
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
+                    // Tombol Dark Mode
                     ValueListenableBuilder<ThemeMode>(
                       valueListenable: themeNotifier,
                       builder: (context, currentMode, child) {
@@ -156,8 +182,7 @@ class SideDrawer extends StatelessWidget {
                           onTap: () => themeNotifier.value = isDark
                               ? ThemeMode.light
                               : ThemeMode.dark,
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
+                          child: Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 8,
                               vertical: 6,
@@ -189,7 +214,6 @@ class SideDrawer extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 2),
                 Text(
                   'example@gmail.com',
                   style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
@@ -204,7 +228,12 @@ class SideDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuItem(BuildContext context, IconData icon, String title) {
+  Widget _buildMenuItem(
+    BuildContext context,
+    IconData icon,
+    String title,
+    int targetIndex,
+  ) {
     return ListTile(
       leading: Icon(
         icon,
@@ -219,33 +248,8 @@ class SideDrawer extends StatelessWidget {
           color: Theme.of(context).colorScheme.onSurface,
         ),
       ),
-      trailing: const Icon(Icons.chevron_right, color: Colors.grey),
-      onTap: () {
-        // --- LOGIKA NAVIGASI ---
-        Navigator.pop(context); // Tutup drawer/menu otomatis
-
-        if (title == 'Home') {
-          // Navigator.pushReplacement(...)
-        } else if (title == 'Wishlist') {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const WishlistPage()),
-          );
-        } else if (title == 'Profile') {
-          // Navigator.push(...)
-        }
-        // --- TAMBAHKAN LOGIKA LOGOUT DI SINI ---
-        else if (title == 'Logout') {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const SplashScreen(),
-            ), // Ganti ke class Splash milikmu
-            (route) =>
-                false, // Ini akan menghapus semua history page sebelumnya
-          );
-        }
-      },
+      trailing: const Icon(Icons.chevron_right, color: Colors.grey, size: 20),
+      onTap: () => _navigateToPage(context, targetIndex),
       dense: true,
       visualDensity: const VisualDensity(vertical: -2),
     );

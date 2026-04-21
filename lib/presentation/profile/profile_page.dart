@@ -30,16 +30,21 @@ class _FootFlareProfileState extends State<FootFlareProfile> {
 
   @override
   Widget build(BuildContext context) {
+    // Deteksi Mode Gelap
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? Colors.white : Colors.black;
+    final scaffoldBg = Theme.of(context).scaffoldBackgroundColor;
+    final cardBg = isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF6F6F6);
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: scaffoldBg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: scaffoldBg,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: Padding(
           padding: const EdgeInsets.only(left: 15, top: 8, bottom: 8),
           child: GestureDetector(
-            behavior: HitTestBehavior.opaque,
             onTap: () {
               if (Navigator.of(context).canPop()) {
                 Navigator.of(context).pop();
@@ -51,16 +56,16 @@ class _FootFlareProfileState extends State<FootFlareProfile> {
                 );
               }
             },
-            child: _buildSquareButton(Icons.arrow_back_ios_new, size: 18),
+            child: _buildSquareButton(context, Icons.arrow_back_ios_new, size: 18),
           ),
         ),
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'Profile',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 18,
-            color: Colors.black,
+            color: textColor,
             fontFamily: 'Jost',
           ),
         ),
@@ -72,7 +77,7 @@ class _FootFlareProfileState extends State<FootFlareProfile> {
                 context,
                 MaterialPageRoute(builder: (context) => const SearchPage()),
               ),
-              child: _buildSquareButton(Icons.search, size: 22),
+              child: _buildSquareButton(context, Icons.search, size: 22),
             ),
           ),
         ],
@@ -83,19 +88,19 @@ class _FootFlareProfileState extends State<FootFlareProfile> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
-            const Row(
+            Row(
               children: [
-                CircleAvatar(
+                const CircleAvatar(
                   radius: 30,
                   backgroundImage: AssetImage('assets/images/wajahAmel.png'),
                 ),
-                SizedBox(width: 15),
+                const SizedBox(width: 15),
                 Text.rich(
                   TextSpan(
-                    style: TextStyle(fontSize: 20, color: Colors.black, fontFamily: 'Jost'),
+                    style: TextStyle(fontSize: 20, color: textColor, fontFamily: 'Jost'),
                     children: [
-                      TextSpan(text: "Hello, "),
-                      TextSpan(text: "Amelia", style: TextStyle(fontWeight: FontWeight.bold)),
+                      const TextSpan(text: "Hello, "),
+                      const TextSpan(text: "Amelia", style: TextStyle(fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),
@@ -108,6 +113,7 @@ class _FootFlareProfileState extends State<FootFlareProfile> {
               children: [
                 Expanded(
                   child: _buildUpperButton(
+                    context,
                     "Your Order",
                     onTap: () => Navigator.push(
                       context,
@@ -118,6 +124,7 @@ class _FootFlareProfileState extends State<FootFlareProfile> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: _buildUpperButton(
+                    context,
                     "Wishlist",
                     onTap: () => Navigator.push(
                       context,
@@ -132,6 +139,7 @@ class _FootFlareProfileState extends State<FootFlareProfile> {
               children: [
                 Expanded(
                   child: _buildUpperButton(
+                    context,
                     "Coupons",
                     onTap: () => Navigator.push(
                         context, MaterialPageRoute(builder: (context) => const CouponsPage())),
@@ -140,6 +148,7 @@ class _FootFlareProfileState extends State<FootFlareProfile> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: _buildUpperButton(
+                    context,
                     "Track Order",
                     onTap: () => Navigator.push(
                       context,
@@ -159,43 +168,41 @@ class _FootFlareProfileState extends State<FootFlareProfile> {
             ),
             
             const SizedBox(height: 35),
-            const Text("Account Settings",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Jost')),
+            Text("Account Settings",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Jost', color: textColor)),
             const SizedBox(height: 10),
             
-            _buildMenuTile(Icons.person_outline, "Edit Profile", isEditProfile: true),
+            _buildMenuTile(context, Icons.person_outline, "Edit Profile", isEditProfile: true),
             
-            _buildMenuTile(Icons.account_balance_wallet_outlined, "Saved Cards & Wallet", 
+            _buildMenuTile(context, Icons.account_balance_wallet_outlined, "Saved Cards & Wallet", 
               onTap: () => Navigator.push(
                 context, 
                 MaterialPageRoute(builder: (context) => const PaymentScreen())
               )
             ),
             
-            _buildMenuTile(Icons.location_on_outlined, "Saved Addresses", 
+            _buildMenuTile(context, Icons.location_on_outlined, "Saved Addresses", 
               onTap: () => Navigator.push(
                 context, 
                 MaterialPageRoute(builder: (context) => const AddAddressScreen())
               )
             ),
             
-            _buildMenuTile(Icons.translate, selectedLanguage, isLanguage: true),
+            _buildMenuTile(context, Icons.translate, selectedLanguage, isLanguage: true),
             
-            _buildMenuTile(Icons.notifications_none_outlined, "Notifications Settings",
+            _buildMenuTile(context, Icons.notifications_none_outlined, "Notifications Settings",
               onTap: () => Navigator.push(
                 context, 
                 MaterialPageRoute(builder: (context) => const NotificationPage())
               )
             ),
             
-            // Tombol Logout Telah Dihapus dari Sini
-            
             const SizedBox(height: 25),
-            const Text("My Activity",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Jost')),
+            Text("My Activity",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Jost', color: textColor)),
             const SizedBox(height: 10),
-            _buildMenuTile(Icons.star_outline, "Reviews"),
-            _buildMenuTile(Icons.message_outlined, "FAQ"),
+            _buildMenuTile(context, Icons.star_outline, "Reviews"),
+            _buildMenuTile(context, Icons.message_outlined, "FAQ"),
             const SizedBox(height: 40),
           ],
         ),
@@ -203,42 +210,53 @@ class _FootFlareProfileState extends State<FootFlareProfile> {
     );
   }
 
-  Widget _buildSquareButton(IconData icon, {double size = 20}) {
+  Widget _buildSquareButton(BuildContext context, IconData icon, {double size = 20}) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
-          color: const Color(0xFFF7F7F7), borderRadius: BorderRadius.circular(10)),
+          color: isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF7F7F7), 
+          borderRadius: BorderRadius.circular(10)),
       padding: const EdgeInsets.all(8),
-      child: Icon(icon, color: Colors.black, size: size),
+      child: Icon(icon, color: isDark ? Colors.white : Colors.black, size: size),
     );
   }
 
-  Widget _buildUpperButton(String label, {VoidCallback? onTap}) {
+  Widget _buildUpperButton(BuildContext context, String label, {VoidCallback? onTap}) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(10),
       child: Container(
         height: 55,
         decoration: BoxDecoration(
-            color: const Color(0xFFF6F6F6), borderRadius: BorderRadius.circular(10)),
+            color: isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF6F6F6), 
+            borderRadius: BorderRadius.circular(10)),
         alignment: Alignment.center,
         child: Text(label,
-            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, fontFamily: 'Jost')),
+            style: TextStyle(
+              fontWeight: FontWeight.w600, 
+              fontSize: 14, 
+              fontFamily: 'Jost', 
+              color: isDark ? Colors.white : Colors.black)),
       ),
     );
   }
 
-  Widget _buildMenuTile(IconData icon, String title,
+  Widget _buildMenuTile(BuildContext context, IconData icon, String title,
       {bool isEditProfile = false, bool isLanguage = false, VoidCallback? onTap}) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? Colors.white : Colors.black;
+
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      leading: Icon(icon, color: Colors.black, size: 24),
+      leading: Icon(icon, color: textColor, size: 24),
       title: Text(title,
-          style: const TextStyle(
+          style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w500,
               fontFamily: 'Jost',
-              color: Colors.black)),
-      trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.black),
+              color: textColor)),
+      trailing: Icon(Icons.arrow_forward_ios, size: 14, color: textColor),
       onTap: onTap ?? () {
         if (isEditProfile) {
           Navigator.push(context, MaterialPageRoute(builder: (context) => const EditProfilePage()));
@@ -254,7 +272,7 @@ class _FootFlareProfileState extends State<FootFlareProfile> {
   }
 }
 
-// --- Halaman Edit Profile ---
+// --- Halaman Edit Profile (Support Dark Mode) ---
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
 
@@ -273,22 +291,27 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? Colors.white : Colors.black;
+    final scaffoldBg = Theme.of(context).scaffoldBackgroundColor;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: scaffoldBg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: scaffoldBg,
         elevation: 0,
         centerTitle: true,
-        title: const Text('Edit Profile',
-            style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Jost', color: Colors.black)),
+        title: Text('Edit Profile',
+            style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Jost', color: textColor)),
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: GestureDetector(
             onTap: () => Navigator.pop(context),
             child: Container(
               decoration: BoxDecoration(
-                  color: const Color(0xFFF7F7F7), borderRadius: BorderRadius.circular(10)),
-              child: const Icon(Icons.arrow_back_ios_new, size: 18, color: Colors.black),
+                  color: isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF7F7F7), 
+                  borderRadius: BorderRadius.circular(10)),
+              child: Icon(Icons.arrow_back_ios_new, size: 18, color: textColor),
             ),
           ),
         ),
@@ -307,30 +330,30 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       children: [
                         CircleAvatar(
                           radius: 70,
-                          backgroundColor: Colors.grey.shade200,
+                          backgroundColor: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
                           backgroundImage: _imageFile != null
                               ? FileImage(_imageFile!)
                               : const AssetImage('assets/images/wajahAmel.png') as ImageProvider,
                         ),
                         GestureDetector(
                           onTap: _pickImage,
-                          child: const CircleAvatar(
+                          child: CircleAvatar(
                             radius: 18,
-                            backgroundColor: Colors.black,
-                            child: Icon(Icons.camera_alt, color: Colors.white, size: 18),
+                            backgroundColor: isDark ? Colors.white : Colors.black,
+                            child: Icon(Icons.camera_alt, color: isDark ? Colors.black : Colors.white, size: 18),
                           ),
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 40),
-                  _buildOutlineField(Icons.person_outline, "Full Name", "Amelia"),
+                  _buildOutlineField(context, Icons.person_outline, "Full Name", "Amelia"),
                   const SizedBox(height: 15),
-                  _buildOutlineField(Icons.mail_outline, "Email", "amelia@example.com"),
+                  _buildOutlineField(context, Icons.mail_outline, "Email", ""),
                   const SizedBox(height: 15),
-                  _buildOutlineField(Icons.phone_outlined, "Phone Number", "+62 812..."),
+                  _buildOutlineField(context, Icons.phone_outlined, "Phone Number", ""),
                   const SizedBox(height: 15),
-                  _buildOutlineField(Icons.location_on_outlined, "Location", "Yogyakarta, Indonesia"),
+                  _buildOutlineField(context, Icons.location_on_outlined, "Location", ""),
                 ],
               ),
             ),
@@ -343,12 +366,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
               child: ElevatedButton(
                 onPressed: () => Navigator.pop(context),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
+                  backgroundColor: isDark ? Colors.white : Colors.black,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                child: const Text("Update Profile",
+                child: Text("Update Profile",
                     style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold, fontFamily: 'Jost')),
+                        color: isDark ? Colors.black : Colors.white, 
+                        fontWeight: FontWeight.bold, 
+                        fontFamily: 'Jost')),
               ),
             ),
           ),
@@ -357,23 +382,26 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget _buildOutlineField(IconData icon, String label, String initialValue) {
+  Widget _buildOutlineField(BuildContext context, IconData icon, String label, String initialValue) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? Colors.white : Colors.black;
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade300),
+        border: Border.all(color: isDark ? Colors.grey.shade700 : Colors.grey.shade300),
       ),
       child: IntrinsicHeight(
         child: Row(
           children: [
-            SizedBox(width: 50, child: Icon(icon, color: Colors.black, size: 22)),
-            VerticalDivider(width: 1, thickness: 1, color: Colors.grey.shade300),
+            SizedBox(width: 50, child: Icon(icon, color: textColor, size: 22)),
+            VerticalDivider(width: 1, thickness: 1, color: isDark ? Colors.grey.shade700 : Colors.grey.shade300),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                 child: TextFormField(
                   initialValue: initialValue,
-                  style: const TextStyle(fontFamily: 'Jost', fontWeight: FontWeight.w600),
+                  style: TextStyle(fontFamily: 'Jost', fontWeight: FontWeight.w600, color: textColor),
                   decoration: InputDecoration(
                     labelText: label,
                     labelStyle: const TextStyle(color: Colors.grey, fontSize: 12),

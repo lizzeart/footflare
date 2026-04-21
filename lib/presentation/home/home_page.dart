@@ -4,6 +4,8 @@ import 'widgets/side_drawer.dart';
 import 'widgets/promo_banner.dart';
 import 'widgets/brand_list.dart';
 import 'widgets/product_grid.dart';
+import '../category/category_page.dart';
+import '../main_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,56 +15,84 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-    });
-  }
+  int selectedCategory = 0;
 
-  
+  final List<String> cats = [
+    'All',
+    'Child',
+    'Man',
+    'Woman',
+    'Unisex'
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark =
+        Theme.of(context).brightness ==
+            Brightness.dark;
 
     return Scaffold(
       drawer: const SideDrawer(),
       appBar: const HomeAppBar(),
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment:
+              CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: _buildSearchBar(context, isDark),
+              padding:
+                  const EdgeInsets.all(20),
+              child: _buildSearchBar(
+                  context, isDark),
             ),
+
             const SizedBox(height: 10),
 
-            // PromoBanner dipanggil full-width tanpa padding
             const PromoBanner(),
 
             const SizedBox(height: 24),
+
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              padding:
+                  const EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment:
+                    CrossAxisAlignment.start,
                 children: [
-                  _buildSectionTitle(context, 'Top Brands', 'View All'),
+                  _buildSectionTitle(
+                    context,
+                    'Top Brands',
+                    'View All',
+                  ),
+
                   const SizedBox(height: 16),
+
                   const BrandList(),
+
                   const SizedBox(height: 24),
+
                   Text(
                     'New Arrival',
                     style: TextStyle(
                       fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onSurface,
+                      fontWeight:
+                          FontWeight.bold,
+                      color: Theme.of(
+                              context)
+                          .colorScheme
+                          .onSurface,
                     ),
                   ),
+
                   const SizedBox(height: 16),
-                  _buildCategories(context, isDark),
+
+                  _buildCategories(
+                      context, isDark),
+
                   const SizedBox(height: 16),
+
                   const ProductGrid(),
                 ],
               ),
@@ -73,44 +103,65 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildSearchBar(BuildContext context, bool isDark) {
+  Widget _buildCategories(
+      BuildContext context,
+      bool isDark) {
+    return SizedBox(
+      height: 42,
+      child: ListView.builder(
+        scrollDirection:
+            Axis.horizontal,
+        itemCount: cats.length,
+        itemBuilder: (context, i) {
+          return _HoverCategoryItem(
+            text: cats[i],
+            active:
+                selectedCategory == i,
+            isDark: isDark,
+            onTap: () {
+              setState(() {
+                selectedCategory = i;
+              });
+
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const MainScreen(
+                    initialIndex: 3,
+                  ),
+                ),
+              );
+            },            
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildSearchBar(
+      BuildContext context,
+      bool isDark) {
     return Row(
       children: [
         Expanded(
           child: SizedBox(
             height: 50,
             child: TextField(
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurface,
-                fontSize:
-                    16, // Ukuran teks saat mengetik diperbesar menjadi ideal
-                fontFamily: 'Jost',
-              ),
-              decoration: InputDecoration(
-                hintText: 'Search Product',
-                hintStyle: TextStyle(
-                  color: Colors.grey.shade500,
-                  fontSize: 16, // Ukuran teks placeholder diperbesar
-                  fontFamily: 'Jost',
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 0,
-                ),
+              decoration:
+                  InputDecoration(
+                hintText:
+                    'Search Product',
                 filled: true,
-                fillColor: isDark ? const Color(0xFF2A2D3A) : Colors.white,
-
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                    color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                    color: isDark ? Colors.white54 : Colors.black,
-                  ),
+                fillColor: isDark
+                    ? const Color(
+                        0xFF2A2D3A)
+                    : Colors.white,
+                border:
+                    OutlineInputBorder(
+                  borderRadius:
+                      BorderRadius
+                          .circular(
+                              12),
                 ),
               ),
             ),
@@ -120,71 +171,143 @@ class _HomePageState extends State<HomePage> {
         Container(
           height: 50,
           width: 50,
-          decoration: BoxDecoration(
-            color: isDark ? Colors.white : Colors.black,
-            borderRadius: BorderRadius.circular(12),
+          decoration:
+              BoxDecoration(
+            color: isDark
+                ? Colors.white
+                : Colors.black,
+            borderRadius:
+                BorderRadius
+                    .circular(12),
           ),
-          child: Icon(Icons.tune, color: isDark ? Colors.black : Colors.white),
+          child: Icon(
+            Icons.tune,
+            color: isDark
+                ? Colors.black
+                : Colors.white,
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildSectionTitle(BuildContext context, String title, String action) {
+  Widget _buildSectionTitle(
+      BuildContext context,
+      String title,
+      String action) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment:
+          MainAxisAlignment
+              .spaceBetween,
       children: [
         Text(
           title,
           style: TextStyle(
             fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.onSurface,
+            fontWeight:
+                FontWeight.bold,
+            color: Theme.of(
+                    context)
+                .colorScheme
+                .onSurface,
           ),
         ),
         Text(
           action,
           style: TextStyle(
             fontSize: 14,
-            decoration: TextDecoration.underline,
-            color: Theme.of(context).colorScheme.onSurface,
+            decoration:
+                TextDecoration
+                    .underline,
+            color: Theme.of(
+                    context)
+                .colorScheme
+                .onSurface,
           ),
         ),
       ],
     );
   }
+}
 
-  Widget _buildCategories(BuildContext context, bool isDark) {
-    final cats = ['All', 'Child', 'Man', 'Woman', 'Unisex'];
-    return SizedBox(
-      height: 40,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: cats.length,
-        itemBuilder: (context, index) {
-          bool isActive = index == 0;
-          return Container(
-            margin: const EdgeInsets.only(right: 10),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            decoration: BoxDecoration(
-              color: isActive
-                  ? (isDark ? Colors.white : Colors.black)
-                  : (isDark ? const Color(0xFF2A2D3A) : Colors.grey.shade100),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Center(
-              child: Text(
-                cats[index],
-                style: TextStyle(
-                  color: isActive
-                      ? (isDark ? Colors.black : Colors.white)
-                      : (isDark ? Colors.white70 : Colors.black),
-                  fontWeight: FontWeight.w500,
-                ),
+class _HoverCategoryItem
+    extends StatefulWidget {
+  final String text;
+  final bool active;
+  final bool isDark;
+  final VoidCallback onTap;
+
+  const _HoverCategoryItem({
+    required this.text,
+    required this.active,
+    required this.isDark,
+    required this.onTap,
+  });
+
+  @override
+  State<_HoverCategoryItem>
+      createState() =>
+          _HoverCategoryItemState();
+}
+
+class _HoverCategoryItemState
+    extends State<_HoverCategoryItem> {
+  bool hover = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final active =
+        widget.active || hover;
+
+    return MouseRegion(
+      onEnter: (_) {
+        setState(() {
+          hover = true;
+        });
+      },
+      onExit: (_) {
+        setState(() {
+          hover = false;
+        });
+      },
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration:
+              const Duration(
+                  milliseconds:
+                      250),
+          margin:
+              const EdgeInsets.only(
+                  right: 10),
+          padding:
+              const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 10,
+          ),
+          decoration:
+              BoxDecoration(
+            color: active
+                ? Colors.black
+                : Colors.grey
+                    .shade100,
+            borderRadius:
+                BorderRadius
+                    .circular(8),
+          ),
+          child: Center(
+            child: Text(
+              widget.text,
+              style: TextStyle(
+                color: active
+                    ? Colors.white
+                    : Colors.black,
+                fontWeight:
+                    FontWeight.w500,
               ),
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }

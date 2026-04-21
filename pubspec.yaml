@@ -1,6 +1,6 @@
 name: footflare
-description: "A new Flutter project."
-publish_to: 'none' # Mencegah publikasi ke pub.dev secara tidak sengaja
+description: "FootFlare Flutter Project"
+publish_to: 'none'
 
 version: 1.0.0+1
 
@@ -12,27 +12,28 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
-  
-  # Library untuk mengambil foto dari galeri/kamera di halaman Edit Profile
-  image_picker: ^1.1.2 
+  image_picker: ^1.1.2
+  flutter_svg: ^2.0.10+1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+
+  flutter_lints: ^6.0.0
 
 flutter:
-  # Mengaktifkan penggunaan Material Design 3
   uses-material-design: true
 
-  # Konfigurasi Assets (Gambar, Icon, dan Font)
-  # Pastikan file wajahAmel.png sudah ada di dalam folder assets/images/
   assets:
     - assets/fonts/
     - assets/images/
     - assets/icons/
 
-  # Konfigurasi Custom Fonts (Jost & Inter) sesuai desain FootFlare
+    - assets/logo_brand/
+    - assets/kategory/
+    - assets/product/
+    - assets/icon/
+
   fonts:
     - family: Jost
       fonts:
@@ -40,8 +41,12 @@ flutter:
           weight: 400
         - asset: assets/fonts/Jost-Medium.ttf
           weight: 500
+        - asset: assets/fonts/Jost-SemiBold.ttf
+          weight: 600
         - asset: assets/fonts/Jost-Bold.ttf
           weight: 700
+        - asset: assets/fonts/Jost-ExtraBold.ttf
+          weight: 800
 
     - family: Inter
       fonts:

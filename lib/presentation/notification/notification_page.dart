@@ -47,20 +47,36 @@ class NotificationPage extends StatelessWidget {
         centerTitle: true,
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 16.0, top: 8.0, bottom: 8.0),
+            padding: const EdgeInsets.only(
+              right: 16.0,
+              top: 8.0,
+              bottom: 8.0,
+            ),
             child: GestureDetector(
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SearchPage())),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) =>
+                      const SearchPage(),
+                ),
+              ),
               child: Container(
                 width: 40,
+                height: 40, // samakan tinggi
                 decoration: BoxDecoration(
-                  color: boxColor, 
-                  borderRadius: BorderRadius.circular(12)
+                  color: boxColor,
+                  borderRadius:
+                      BorderRadius.circular(12),
                 ),
-                child: Icon(Icons.search, size: 20, color: iconColor),
+                child: Icon(
+                  Icons.search,
+                  size: 20,
+                  color: iconColor,
+                ),
               ),
             ),
           ),
-        ],
+        ],        
       ),
       body: ListView.separated(
         itemCount: notifications.length,
