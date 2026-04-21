@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:footflare/presentation/home/home_page.dart';
 import 'package:footflare/presentation/wishlist/wishlist_page.dart';
+// 1. TAMBAHKAN IMPORT INI
+import 'package:footflare/presentation/profile/profile_page.dart'; 
 import 'package:footflare/presentation/widgets/custom_bottom_nav.dart';
 
 class MainScreen extends StatefulWidget {
@@ -11,21 +13,21 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _currentIndex = 0; // 0 untuk Home, 1 untuk Wishlist
+  int _currentIndex = 0; 
 
-  // List halaman yang akan dipanggil
+  // 2. UPDATE LIST HALAMAN DI SINI
   final List<Widget> _pages = [
     const HomePage(),
     const WishlistPage(),
     const Center(child: Text("Cart")),
     const Center(child: Text("Category")),
-    const Center(child: Text("Profile")),
+    const FootFlareProfile(), // <--- Ganti Text("Profile") menjadi ini
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_currentIndex], // Menampilkan WishlistPage jika index = 1
+      body: _pages[_currentIndex], 
       bottomNavigationBar: CustomBottomNav(
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
