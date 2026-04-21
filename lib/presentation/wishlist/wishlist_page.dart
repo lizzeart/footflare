@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models/product_models.dart';
 import 'package:footflare/presentation/wishlist/widgets/wishlist_card.dart';
 import 'package:footflare/presentation/search/search_page.dart';
+import '../home/home_page.dart';
 
 class WishlistPage extends StatefulWidget {
   const WishlistPage({super.key});
@@ -39,7 +40,18 @@ class _WishlistPageState extends State<WishlistPage> {
       appBar: AppBar(
         backgroundColor: colorScheme.surface,
         elevation: 0,
-        leading: _buildHeaderIcon(Icons.arrow_back_ios_new, () => Navigator.pop(context), size: 16),
+        // MODIFIKASI DI SINI:
+        leading: _buildHeaderIcon(
+          Icons.arrow_back_ios_new,
+          () {
+            // Gunakan pushReplacement agar pasti pindah ke HomePage
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const HomePage()),
+            );
+          },
+          size: 16
+        ),
         title: Text(
           "Wishlist",
           style: TextStyle(
