@@ -12,23 +12,26 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   // Variabel untuk menyimpan metode mana yang sedang dipilih/meluas
-  String selectedMethod = "Credit"; // Default: Credit Card sesuai Foto 5
+  String selectedMethod = "Credit"; // Default: Credit Card
 
   @override
   Widget build(BuildContext context) {
+    // Deteksi Tema
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? const Color(0xFF1E1F28) : Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: isDark ? const Color(0xFF1E1F28) : Colors.white,
         elevation: 0,
         centerTitle: true,
         leadingWidth: 52,
-        leading: _buildBackButton(context),
-        title: const Text(
+        leading: _buildBackButton(context, isDark),
+        title: Text(
           "Payment",
           style: TextStyle(
             fontFamily: 'Jost',
-            color: Colors.black,
+            color: isDark ? Colors.white : Colors.black,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -42,7 +45,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // --- SECTION CARDS (HORIZONTAL SCROLL) ---
-                  _buildCardSection(),
+                  _buildCardSection(isDark),
                   const SizedBox(height: 24),
 
                   // --- DAFTAR METODE PEMBAYARAN (EXPANDABLE) ---
@@ -50,34 +53,36 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     id: "Cash",
                     icon: Icons.attach_money_rounded,
                     title: "Cash on Delivery(Cash/UPI)",
-                    expandedChild: _buildCashDetail(), // Detail sesuai Foto 6
+                    expandedChild: _buildCashDetail(),
+                    isDark: isDark,
                   ),
                   _buildExpandableMethod(
                     id: "UPI",
                     icon: Icons.qr_code_scanner_rounded,
                     title: "Google Pay/Phone Pay/BHIM UPI",
-                    expandedChild:
-                        _buildUPIDetail(), // Detail sesuai Foto 5 (Expanded)
+                    expandedChild: _buildUPIDetail(isDark),
+                    isDark: isDark,
                   ),
                   _buildExpandableMethod(
                     id: "Wallet",
                     icon: Icons.account_balance_wallet_outlined,
                     title: "Payments/Wallet",
-                    expandedChild: _buildWalletDetail(), // Detail sesuai Foto 7
+                    expandedChild: _buildWalletDetail(isDark),
+                    isDark: isDark,
                   ),
                   _buildExpandableMethod(
                     id: "Netbanking",
                     icon: Icons.account_balance_rounded,
                     title: "Netbanking",
-                    expandedChild:
-                        _buildNetbankingDetail(), // Detail sesuai Foto 8
+                    expandedChild: _buildNetbankingDetail(isDark),
+                    isDark: isDark,
                   ),
                 ],
               ),
             ),
           ),
           // Tombol Continue di Paling Bawah
-          _buildContinueButton(),
+          _buildContinueButton(isDark),
         ],
       ),
     );
@@ -89,21 +94,23 @@ class _PaymentScreenState extends State<PaymentScreen> {
     required IconData icon,
     required String title,
     required Widget expandedChild,
+    required bool isDark,
   }) {
     bool isSelected = selectedMethod == id;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: const Color(
-          0xFFF9F9F9,
-        ), // Warna abu-abu sangat muda sesuai referensi
+        color: isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF9F9F9),
         borderRadius: BorderRadius.circular(12),
-        border: isSelected ? Border.all(color: Colors.grey.shade300) : null,
+        border: isSelected
+            ? Border.all(
+                color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
+              )
+            : null,
       ),
       child: Column(
         children: [
-          // Bagian Header (Selalu muncul, kursor telunjuk)
           MouseRegion(
             cursor: SystemMouseCursors.click,
             child: GestureDetector(
@@ -114,24 +121,30 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    Icon(icon, color: Colors.black, size: 22),
+                    Icon(
+                      icon,
+                      color: isDark ? Colors.white : Colors.black,
+                      size: 22,
+                    ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         title,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontFamily: 'Jost',
                           fontWeight: FontWeight.w500,
                           fontSize: 15,
+                          color: isDark ? Colors.white : Colors.black,
                         ),
                       ),
                     ),
-                    // Radio Button
                     Icon(
                       isSelected
                           ? Icons.radio_button_checked
                           : Icons.radio_button_off,
-                      color: isSelected ? Colors.black : Colors.grey.shade400,
+                      color: isSelected
+                          ? (isDark ? Colors.white : Colors.black)
+                          : Colors.grey.shade400,
                       size: 22,
                     ),
                   ],
@@ -139,20 +152,21 @@ class _PaymentScreenState extends State<PaymentScreen> {
               ),
             ),
           ),
-          // Bagian Detail (Hanya muncul jika dipilih, animasi meluas)
-          // Ganti AnimatedCrossFade (baris 668-681) dengan kode di bawah ini:
           AnimatedSize(
             duration: const Duration(milliseconds: 400),
             curve: Curves.easeInOut,
-            child: Container(
+            child: SizedBox(
               width: double.infinity,
               child: !isSelected
                   ? const SizedBox.shrink()
                   : Column(
                       children: [
-                        // Garis pemisah tipis saat terbuka
-                        const Divider(height: 1, color: Color(0xFFF3F3F3)),
-                        // Animasi "Membuka" (seperti berkedip/slide down)
+                        Divider(
+                          height: 1,
+                          color: isDark
+                              ? Colors.grey.shade800
+                              : const Color(0xFFF3F3F3),
+                        ),
                         TweenAnimationBuilder<double>(
                           duration: const Duration(milliseconds: 400),
                           curve: Curves.fastOutSlowIn,
@@ -161,21 +175,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             return ClipRect(
                               child: Align(
                                 alignment: Alignment.topCenter,
-                                heightFactor:
-                                    value, // Ini yang membuat efek "membuka"
-                                child: Opacity(
-                                  opacity: value, // Efek muncul perlahan
-                                  child: child,
-                                ),
+                                heightFactor: value,
+                                child: Opacity(opacity: value, child: child),
                               ),
                             );
                           },
                           child: Padding(
-                            padding: const EdgeInsets.only(
-                              left: 16,
-                              right: 16,
-                              bottom: 16,
-                            ),
+                            padding: const EdgeInsets.all(16),
                             child: expandedChild,
                           ),
                         ),
@@ -188,21 +194,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-  // ===========================================================================
-  // --- WIDGET DETAIL UNTUK MASING-MASING METODE (SESUAI FOTO REFERENSI) ---
-  // ===========================================================================
-
-  // 1. Detail Cash (Foto 6)
+  // 1. Detail Cash
   Widget _buildCashDetail() {
     return Align(
-      // Gunakan Align agar teks menempel ke sisi kiri container
       alignment: Alignment.centerLeft,
       child: Padding(
         padding: const EdgeInsets.only(top: 12),
         child: Text(
           "Carry on your cash payment..\nThanx!",
-          textAlign:
-              TextAlign.left, // Tetap gunakan left untuk teks multi-baris
+          textAlign: TextAlign.left,
           style: const TextStyle(
             fontFamily: 'Jost',
             color: Colors.grey,
@@ -214,33 +214,36 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-  // 2. Detail UPI (Foto 5 Expanded)
-  Widget _buildUPIDetail() {
+  // 2. Detail UPI
+  Widget _buildUPIDetail(bool isDark) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 12),
-        const Text(
+        Text(
           "Link via UPI",
           style: TextStyle(
             fontFamily: 'Jost',
             fontWeight: FontWeight.w600,
             fontSize: 14,
+            color: isDark ? Colors.white : Colors.black,
           ),
         ),
-        _buildMinimalInputField("Enter your UPI ID"),
-        _buildInlineContinueButton(),
+        _buildMinimalInputField("Enter your UPI ID", isDark),
+        _buildInlineContinueButton(isDark),
         const SizedBox(height: 8),
         const Row(
           children: [
             Icon(Icons.check_circle_outline, color: Colors.green, size: 18),
             SizedBox(width: 8),
-            Text(
-              "Your UPI ID Will be encrypted and is 100% safe with us.",
-              style: TextStyle(
-                fontFamily: 'Jost',
-                color: Colors.grey,
-                fontSize: 12,
+            Expanded(
+              child: Text(
+                "Your UPI ID Will be encrypted and is 100% safe with us.",
+                style: TextStyle(
+                  fontFamily: 'Jost',
+                  color: Colors.grey,
+                  fontSize: 12,
+                ),
               ),
             ),
           ],
@@ -249,68 +252,82 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-  // 3. Detail Wallet (Foto 7)
-  Widget _buildWalletDetail() {
+  // 3. Detail Wallet
+  Widget _buildWalletDetail(bool isDark) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 12),
-        const Text(
+        Text(
           "Link Your Wallet",
           style: TextStyle(
             fontFamily: 'Jost',
             fontWeight: FontWeight.w600,
             fontSize: 14,
+            color: isDark ? Colors.white : Colors.black,
           ),
         ),
-        _buildMinimalInputField("+91"), // Contoh nomor India sesuai referensi
-        _buildInlineContinueButton(),
+        _buildMinimalInputField("+91", isDark),
+        _buildInlineContinueButton(isDark),
       ],
     );
   }
 
-  // 4. Detail Netbanking (Foto 8)
-  Widget _buildNetbankingDetail() {
+  // 4. Detail Netbanking
+  Widget _buildNetbankingDetail(bool isDark) {
     return Container(
       margin: const EdgeInsets.only(top: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? const Color(0xFF1E1F28) : Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade300),
+        border: Border.all(
+          color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
+        ),
       ),
       child: ListTile(
         onTap: () =>
             Navigator.push(context, slideInRoute(const NetbankingScreen())),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-        title: const Text(
+        title: Text(
           "Netbanking",
-          style: TextStyle(fontFamily: 'Jost', fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontFamily: 'Jost',
+            fontWeight: FontWeight.bold,
+            color: isDark ? Colors.white : Colors.black,
+          ),
         ),
-        subtitle: const Text(
+        subtitle: Text(
           "Carry on your payment by select your bank",
           textAlign: TextAlign.left,
-          style: TextStyle(fontFamily: 'Jost', fontSize: 12),
+          style: TextStyle(
+            fontFamily: 'Jost',
+            fontSize: 12,
+            color: isDark ? Colors.white70 : Colors.black54,
+          ),
         ),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        trailing: Icon(
+          Icons.arrow_forward_ios,
+          size: 16,
+          color: isDark ? Colors.white : Colors.black,
+        ),
       ),
     );
   }
 
-  // ===========================================================================
-  // --- SECTION KARTU KREDIT (HORIZONTAL SCROLL) ---
-  // ===========================================================================
-  Widget _buildCardSection() {
+  // --- SECTION KARTU KREDIT ---
+  Widget _buildCardSection(bool isDark) {
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
+            Text(
               "Credit/Debit Card",
               style: TextStyle(
                 fontFamily: 'Jost',
                 fontWeight: FontWeight.w600,
                 fontSize: 16,
+                color: isDark ? Colors.white : Colors.black,
               ),
             ),
             MouseRegion(
@@ -327,19 +344,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     ),
                   );
                 },
-                child: const Row(
+                child: Row(
                   children: [
                     Icon(
                       Icons.add_circle_outline,
                       size: 18,
-                      color: Colors.black,
+                      color: isDark ? Colors.white : Colors.black,
                     ),
-                    SizedBox(width: 4),
+                    const SizedBox(width: 4),
                     Text(
                       "Add Card",
                       style: TextStyle(
                         fontFamily: 'Jost',
-                        color: Colors.black,
+                        color: isDark ? Colors.white : Colors.black,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -355,7 +372,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
-              // ✅ Tambah parameter type di sini
               _buildVisaCard(
                 Colors.black,
                 "4532",
@@ -375,7 +391,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-  // ✅ Tambah parameter type
   Widget _buildVisaCard(
     Color bgColor,
     String lastFour,
@@ -397,7 +412,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
             height: 40,
             child: Stack(
               children: [
-                // KIRI ATAS (radio + text)
                 Align(
                   alignment: Alignment.topLeft,
                   child: Row(
@@ -420,8 +434,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     ],
                   ),
                 ),
-
-                // KANAN ATAS (LOGO)
                 Align(
                   alignment: Alignment.topRight,
                   child: type == "DEBIT CARD"
@@ -437,9 +449,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   height: 24,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: Colors.white.withOpacity(
-                                      0.6,
-                                    ), // ⬅️ ini
+                                    color: Colors.white.withOpacity(0.6),
                                   ),
                                 ),
                               ),
@@ -450,9 +460,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   height: 24,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: Colors.white.withOpacity(
-                                      0.6,
-                                    ), // beda dikit biar ada depth
+                                    color: Colors.white.withOpacity(0.6),
                                   ),
                                 ),
                               ),
@@ -523,14 +531,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-  // ===========================================================================
-  // --- INPUT FIELD & BUTTON KECIL (UNTUK DETAIL METODE) ---
-  // ===========================================================================
-  Widget _buildMinimalInputField(String hint) {
+  // --- INPUT FIELD & BUTTON ---
+  Widget _buildMinimalInputField(String hint, bool isDark) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: TextField(
-        style: const TextStyle(fontFamily: 'Jost'),
+        style: TextStyle(
+          fontFamily: 'Jost',
+          color: isDark ? Colors.white : Colors.black,
+        ),
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: const TextStyle(
@@ -539,25 +548,31 @@ class _PaymentScreenState extends State<PaymentScreen> {
             fontSize: 14,
           ),
           filled: true,
-          fillColor: Colors.white,
+          fillColor: isDark ? const Color(0xFF1E1F28) : Colors.white,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 16,
             vertical: 12,
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: Colors.grey.shade200, width: 1.5),
+            borderSide: BorderSide(
+              color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
+              width: 1.5,
+            ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Colors.black, width: 1.5),
+            borderSide: BorderSide(
+              color: isDark ? Colors.white : Colors.black,
+              width: 1.5,
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildInlineContinueButton() {
+  Widget _buildInlineContinueButton(bool isDark) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: MouseRegion(
@@ -565,18 +580,18 @@ class _PaymentScreenState extends State<PaymentScreen> {
         child: ElevatedButton(
           onPressed: () {},
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.black,
+            backgroundColor: isDark ? Colors.white : Colors.black,
             minimumSize: const Size(double.infinity, 48),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
             elevation: 0,
           ).copyWith(overlayColor: WidgetStateProperty.all(Colors.transparent)),
-          child: const Text(
+          child: Text(
             "Continue",
             style: TextStyle(
               fontFamily: 'Jost',
-              color: Colors.white,
+              color: isDark ? Colors.black : Colors.white,
               fontSize: 15,
               fontWeight: FontWeight.w400,
             ),
@@ -586,30 +601,26 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-  // ===========================================================================
-  // --- TOMBOL STANDAR (BACK & BOTTOM CONTINUE) ---
-  // ===========================================================================
-  Widget _buildContinueButton() {
+  Widget _buildContinueButton(bool isDark) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: MouseRegion(
         cursor: SystemMouseCursors.click,
         child: ElevatedButton(
-          onPressed: () =>
-              Navigator.pop(context), // Selesai payment kembali ke Checkout
+          onPressed: () => Navigator.pop(context),
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.black,
+            backgroundColor: isDark ? Colors.white : Colors.black,
             minimumSize: const Size(double.infinity, 56),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
             elevation: 0,
           ).copyWith(overlayColor: WidgetStateProperty.all(Colors.transparent)),
-          child: const Text(
+          child: Text(
             "Continue",
             style: TextStyle(
               fontFamily: 'Jost',
-              color: Colors.white,
+              color: isDark ? Colors.black : Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.w400,
             ),
@@ -619,13 +630,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-  Widget _buildBackButton(BuildContext context) {
+  Widget _buildBackButton(BuildContext context, bool isDark) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: Container(
         margin: const EdgeInsets.only(left: 16, top: 10, bottom: 10),
         decoration: BoxDecoration(
-          color: const Color(0xFFF3F3F3),
+          color: isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF3F3F3),
           borderRadius: BorderRadius.circular(10),
         ),
         child: IconButton(
@@ -634,9 +645,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
             splashFactory: NoSplash.splashFactory,
           ).copyWith(overlayColor: WidgetStateProperty.all(Colors.transparent)),
           padding: EdgeInsets.zero,
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_ios_new,
-            color: Colors.black,
+            color: isDark ? Colors.white : Colors.black,
             size: 18,
           ),
         ),

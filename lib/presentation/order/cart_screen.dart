@@ -18,7 +18,7 @@ class _CartScreenState extends State<CartScreen> {
       "name": "Echo Vibe Urban Runners",
       "price": 179,
       "qty": 1,
-      "image": "assets/images/pic6.png", // Sesuaikan nama filenya
+      "image": "assets/images/pic6.png",
     },
     {
       "name": "Swift Glide Sprinter Soles",
@@ -35,7 +35,7 @@ class _CartScreenState extends State<CartScreen> {
   ];
 
   void _removeItem(int index) {
-    final removedItem = cartItems[index]; // Capture data sebelum dihapus
+    final removedItem = cartItems[index];
 
     _listKey.currentState!.removeItem(
       index,
@@ -44,7 +44,6 @@ class _CartScreenState extends State<CartScreen> {
         child: FadeTransition(
           opacity: animation,
           child: CartItemCard(
-            // Gunakan data dari removedItem yang sudah di-capture
             name: removedItem['name'],
             price: "\$${removedItem['price']}",
             imagePath: removedItem['image'],
@@ -65,15 +64,20 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     int subtotal = cartItems.fold(
       0,
       (sum, item) => sum + (item['price'] * item['qty'] as int),
     );
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      // ✅ hanya ini diubah
+      backgroundColor: isDark ? const Color(0xFF1E1F28) : Colors.white,
+
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        // ✅ ini juga
+        backgroundColor: isDark ? const Color(0xFF1E1F28) : Colors.white,
         elevation: 0,
         centerTitle: true,
         leadingWidth: 52,
@@ -82,39 +86,42 @@ class _CartScreenState extends State<CartScreen> {
           child: Container(
             margin: const EdgeInsets.only(left: 16, top: 10, bottom: 10),
             decoration: BoxDecoration(
-              color: const Color(0xFFF3F3F3),
+              // ✅ ini
+              color: isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF3F3F3),
               borderRadius: BorderRadius.circular(10),
             ),
             child: IconButton(
               onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MainScreen(
-                      initialIndex: 0,
+                if (Navigator.canPop(context)) {
+                  Navigator.pop(context);
+                } else {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MainScreen(initialIndex: 0),
                     ),
-                  ),
-                  (route) => false,
-                );                
-              },              
+                  );
+                }
+              },
               style: ButtonStyle(
                 overlayColor: WidgetStateProperty.all(Colors.transparent),
                 splashFactory: NoSplash.splashFactory,
               ),
               padding: EdgeInsets.zero,
-              icon: const Icon(
+              icon: Icon(
                 Icons.arrow_back_ios_new,
-                color: Colors.black,
+                color: isDark ? Colors.white : Colors.black,
                 size: 18,
               ),
             ),
           ),
         ),
-        title: const Text(
+        title: Text(
           "My Cart",
           style: TextStyle(
             fontFamily: 'Jost',
-            color: Colors.black,
+            // ✅ ini
+            color: isDark ? Colors.white : Colors.black,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -125,7 +132,10 @@ class _CartScreenState extends State<CartScreen> {
               margin: const EdgeInsets.only(right: 16, top: 10, bottom: 10),
               width: 36,
               decoration: BoxDecoration(
-                color: const Color(0xFFF3F3F3),
+                // ✅ ini
+                color: isDark
+                    ? const Color(0xFF2A2D3A)
+                    : const Color(0xFFF3F3F3),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: IconButton(
@@ -135,9 +145,10 @@ class _CartScreenState extends State<CartScreen> {
                   splashFactory: NoSplash.splashFactory,
                 ),
                 padding: EdgeInsets.zero,
-                icon: const Icon(
+                icon: Icon(
                   Icons.location_on_outlined,
-                  color: Colors.black,
+                  // ✅ ini
+                  color: isDark ? Colors.white : Colors.black,
                   size: 20,
                 ),
               ),
@@ -145,6 +156,7 @@ class _CartScreenState extends State<CartScreen> {
           ),
         ],
       ),
+
       body: Column(
         children: [
           Padding(
@@ -154,18 +166,21 @@ class _CartScreenState extends State<CartScreen> {
               children: [
                 RichText(
                   text: TextSpan(
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'Jost',
-                      color: Colors.black,
+                      // ✅ ini
+                      color: isDark ? Colors.white : Colors.black,
                       fontSize: 20,
                     ),
                     children: [
                       const TextSpan(text: "Subtotal "),
                       TextSpan(
                         text: "\$$subtotal",
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 24,
+                          // ✅ ini
+                          color: isDark ? Colors.white : Colors.black,
                         ),
                       ),
                     ],
@@ -190,21 +205,20 @@ class _CartScreenState extends State<CartScreen> {
               ],
             ),
           ),
-          const Divider(),
+
+          // ✅ divider sedikit disesuaikan
+          Divider(color: isDark ? Colors.grey.shade800 : Colors.grey.shade300),
+
           Expanded(
             child: AnimatedList(
               key: _listKey,
               initialItemCount: cartItems.length,
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              // Di dalam AnimatedList -> itemBuilder
               itemBuilder: (context, index, animation) {
                 final item = cartItems[index];
 
                 return CartItemCard(
-                  // TAMBAHKAN KEY DI SINI
-                  // ValueKey menggunakan nama atau ID unik agar Flutter bisa melacak widget ini
                   key: ValueKey(item['name']),
-
                   name: item['name'],
                   price: "\$${item['price']}",
                   imagePath: item['image'],
@@ -218,14 +232,13 @@ class _CartScreenState extends State<CartScreen> {
               },
             ),
           ),
+
           Padding(
             padding: const EdgeInsets.all(16),
             child: MouseRegion(
               cursor: SystemMouseCursors.click,
               child: ElevatedButton(
                 onPressed: () {
-                  // PERBAIKAN: Menggunakan PageRouteBuilder agar transisi instan
-                  // dan mengirim parameter 'items' ke CheckoutScreen
                   Navigator.push(
                     context,
                     PageRouteBuilder(
@@ -238,24 +251,25 @@ class _CartScreenState extends State<CartScreen> {
                 },
                 style:
                     ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
+                      // ✅ ini
+                      backgroundColor: isDark ? Colors.white : Colors.black,
                       minimumSize: const Size(double.infinity, 60),
-                      elevation: 0, // Menghilangkan shadow sesuai permintaanmu
+                      elevation: 0,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      // Menghilangkan efek abu-abu saat kursor diarahkan ke tombol
                       enabledMouseCursor: SystemMouseCursors.click,
                     ).copyWith(
                       overlayColor: WidgetStateProperty.all(Colors.transparent),
                     ),
                 child: Text(
                   "Proceed to Buy (${cartItems.length} Items)",
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Jost',
-                    color: Colors.white,
+                    // ✅ ini
+                    color: isDark ? Colors.black : Colors.white,
                     fontSize: 16,
-                    fontWeight: FontWeight.w400, // Dibuat w600 agar lebih tegas
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ),

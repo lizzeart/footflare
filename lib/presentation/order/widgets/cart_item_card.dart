@@ -27,15 +27,15 @@ class CartItemCard extends StatefulWidget {
 
 class _CartItemCardState extends State<CartItemCard> {
   bool isFavorite = false;
-  bool _isRemoved = false; // Flag untuk memicu animasi hapus
+  final bool _isRemoved = false;
 
   @override
   Widget build(BuildContext context) {
-    // AnimatedOpacity untuk efek memudar
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return AnimatedOpacity(
       duration: const Duration(milliseconds: 300),
       opacity: _isRemoved ? 0.0 : 1.0,
-      // AnimatedSize untuk efek slide mengecil (item lain naik ke atas)
       child: AnimatedSize(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
@@ -45,34 +45,35 @@ class _CartItemCardState extends State<CartItemCard> {
           decoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(
-                color: _isRemoved ? Colors.transparent : Colors.grey.shade100,
+                color: _isRemoved
+                    ? Colors.transparent
+                    : (isDark ? Colors.grey.shade800 : Colors.grey.shade100),
               ),
             ),
           ),
           child: _isRemoved
-              ? const SizedBox.shrink() // Hilangkan isi widget saat dihapus
+              ? const SizedBox.shrink()
               : Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Gambar & Love dengan Fitur Klik ke Detail
-                    _buildProductImage(context),
+                    _buildProductImage(context, isDark),
                     const SizedBox(width: 16),
-                    // Info Produk & Controls
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             widget.name,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 16,
+                              color: isDark ? Colors.white : Colors.black,
                             ),
                           ),
                           const SizedBox(height: 4),
-                          _buildPriceInfo(),
+                          _buildPriceInfo(isDark),
                           const SizedBox(height: 12),
-                          _buildBottomActions(),
+                          _buildBottomActions(isDark),
                         ],
                       ),
                     ),
@@ -85,7 +86,7 @@ class _CartItemCardState extends State<CartItemCard> {
 
   // --- WIDGET HELPERS ---
 
-  Widget _buildProductImage(BuildContext context) {
+  Widget _buildProductImage(BuildContext context, bool isDark) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
@@ -109,7 +110,9 @@ class _CartItemCardState extends State<CartItemCard> {
               width: 100,
               height: 100,
               decoration: BoxDecoration(
-                color: const Color(0xFFF5F5F5),
+                color: isDark
+                    ? const Color(0xFF2A2D3A)
+                    : const Color(0xFFF5F5F5),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: ClipRRect(
@@ -143,12 +146,16 @@ class _CartItemCardState extends State<CartItemCard> {
     );
   }
 
-  Widget _buildPriceInfo() {
+  Widget _buildPriceInfo(bool isDark) {
     return Row(
       children: [
         Text(
           widget.price,
-          style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            fontSize: 18,
+            color: isDark ? Colors.white : Colors.black,
+          ),
         ),
         const SizedBox(width: 12),
         const Text(
@@ -163,35 +170,33 @@ class _CartItemCardState extends State<CartItemCard> {
     );
   }
 
-  Widget _buildBottomActions() {
+  Widget _buildBottomActions(bool isDark) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // Quantity Controls
         Row(
           children: [
-            _qtyContainer(_qtyBtn(Icons.remove, widget.onRemove)),
+            _qtyContainer(
+              _qtyBtn(Icons.remove, widget.onRemove, isDark),
+              isDark,
+            ),
             const SizedBox(width: 8),
-            _qtyDisplay(),
+            _qtyDisplay(isDark),
             const SizedBox(width: 8),
-            _qtyContainer(_qtyBtn(Icons.add, widget.onAdd)),
+            _qtyContainer(_qtyBtn(Icons.add, widget.onAdd, isDark), isDark),
           ],
         ),
-        // Tombol Remove
         MouseRegion(
-          cursor: SystemMouseCursors.click, // Mengubah kursor jadi telunjuk
+          cursor: SystemMouseCursors.click,
           child: GestureDetector(
             onTap: widget.onDelete,
             child: Row(
               children: [
-                // Mengganti Icon dengan Image.asset
                 Image.asset(
                   'assets/icons/trash_icon.png',
                   width: 20,
                   height: 20,
-                  color: Colors
-                      .grey
-                      .shade500, // Opsional: kasih warna kalau filenya tipe siluet/masking
+                  color: Colors.grey.shade500,
                 ),
                 const SizedBox(width: 4),
                 const Text(
@@ -206,45 +211,49 @@ class _CartItemCardState extends State<CartItemCard> {
     );
   }
 
-  Widget _qtyContainer(Widget child) {
+  Widget _qtyContainer(Widget child, bool isDark) {
     return Container(
       width: 36,
       height: 36,
       decoration: BoxDecoration(
-        color: const Color(0xFFF3F3F3),
+        color: isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF3F3F3),
         borderRadius: BorderRadius.circular(8),
       ),
       child: child,
     );
   }
 
-  Widget _qtyDisplay() {
+  Widget _qtyDisplay(bool isDark) {
     return Container(
       width: 40,
       height: 36,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? const Color(0xFF1E1F28) : Colors.white,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.shade300),
+        border: Border.all(
+          color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
+        ),
       ),
       alignment: Alignment.center,
       child: Text(
         '${widget.quantity}',
-        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 16,
+          color: isDark ? Colors.white : Colors.black,
+        ),
       ),
     );
   }
 
-  Widget _qtyBtn(IconData icon, VoidCallback action) {
+  Widget _qtyBtn(IconData icon, VoidCallback action, bool isDark) {
     return IconButton(
       onPressed: action,
-      // Menggunakan styleFrom adalah cara yang lebih standar sekarang
       style: IconButton.styleFrom(
-        splashFactory:
-            NoSplash.splashFactory, // Mematikan efek percikan air saat diklik
+        splashFactory: NoSplash.splashFactory,
         padding: EdgeInsets.zero,
       ),
-      icon: Icon(icon, size: 16, color: Colors.black),
+      icon: Icon(icon, size: 16, color: isDark ? Colors.white : Colors.black),
     );
   }
 }

@@ -8,23 +8,25 @@ class AddAddressScreen extends StatefulWidget {
 }
 
 class _AddAddressScreenState extends State<AddAddressScreen> {
-  String selectedCategory = "Home"; // Default kategori
+  String selectedCategory = "Home";
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? const Color(0xFF1E1F28) : Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: isDark ? const Color(0xFF1E1F28) : Colors.white,
         elevation: 0,
         centerTitle: true,
         leadingWidth: 52,
-        leading: _buildBackButton(context),
-        title: const Text(
+        leading: _buildBackButton(context, isDark),
+        title: Text(
           "Add delivery address",
           style: TextStyle(
             fontFamily: 'Jost',
-            color: Colors.black,
+            color: isDark ? Colors.white : Colors.black,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -37,63 +39,71 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     "Contact Details",
                     style: TextStyle(
                       fontFamily: 'Jost',
                       fontWeight: FontWeight.w700,
                       fontSize: 16,
+                      color: isDark ? Colors.white : Colors.black,
                     ),
                   ),
-                  _buildInputField("Full Name"),
-                  _buildInputField("Mobile No."),
+                  _buildInputField("Full Name", isDark),
+                  _buildInputField("Mobile No.", isDark),
 
                   const SizedBox(height: 24),
-                  const Text(
+
+                  Text(
                     "Address",
                     style: TextStyle(
                       fontFamily: 'Jost',
                       fontWeight: FontWeight.w700,
                       fontSize: 16,
+                      color: isDark ? Colors.white : Colors.black,
                     ),
                   ),
-                  _buildInputField("Pin Code"),
-                  _buildInputField("Address"),
-                  _buildInputField("Locality/Town"),
-                  _buildInputField("City/District"),
-                  _buildInputField("State"),
+                  _buildInputField("Pin Code", isDark),
+                  _buildInputField("Address", isDark),
+                  _buildInputField("Locality/Town", isDark),
+                  _buildInputField("City/District", isDark),
+                  _buildInputField("State", isDark),
 
                   const SizedBox(height: 24),
-                  const Text(
+
+                  Text(
                     "Save Address As",
                     style: TextStyle(
                       fontFamily: 'Jost',
                       fontWeight: FontWeight.w700,
                       fontSize: 16,
+                      color: isDark ? Colors.white : Colors.black,
                     ),
                   ),
+
                   const SizedBox(height: 12),
+
                   Row(
                     children: [
-                      _buildCategoryChip("Home"),
+                      _buildCategoryChip("Home", isDark),
                       const SizedBox(width: 12),
-                      _buildCategoryChip("Shop"),
+                      _buildCategoryChip("Shop", isDark),
                       const SizedBox(width: 12),
-                      _buildCategoryChip("Office"),
+                      _buildCategoryChip("Office", isDark),
                     ],
                   ),
+
                   const SizedBox(height: 20),
                 ],
               ),
             ),
           ),
-          _buildSaveButton(),
+          _buildSaveButton(isDark),
         ],
       ),
     );
   }
 
-  Widget _buildInputField(String label) {
+  Widget _buildInputField(String label, bool isDark) {
     return Padding(
       padding: const EdgeInsets.only(top: 16),
       child: Column(
@@ -101,29 +111,39 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         children: [
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Jost',
               fontWeight: FontWeight.w500,
               fontSize: 14,
+              color: isDark ? Colors.white : Colors.black,
             ),
           ),
           const SizedBox(height: 8),
           TextField(
-            style: const TextStyle(fontFamily: 'Jost'),
+            style: TextStyle(
+              fontFamily: 'Jost',
+              color: isDark ? Colors.white : Colors.black,
+            ),
             decoration: InputDecoration(
               filled: true,
-              fillColor: Colors.white,
+              fillColor: isDark ? const Color(0xFF2A2D3A) : Colors.white,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 12,
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Colors.grey.shade200, width: 1.5),
+                borderSide: BorderSide(
+                  color: isDark ? Colors.grey.shade700 : Colors.grey.shade200,
+                  width: 1.5,
+                ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: Colors.black, width: 1.5),
+                borderSide: BorderSide(
+                  color: isDark ? Colors.white : Colors.black,
+                  width: 1.5,
+                ),
               ),
             ),
           ),
@@ -132,8 +152,9 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
     );
   }
 
-  Widget _buildCategoryChip(String label) {
+  Widget _buildCategoryChip(String label, bool isDark) {
     bool isSelected = selectedCategory == label;
+
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
@@ -141,14 +162,18 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
           decoration: BoxDecoration(
-            color: isSelected ? Colors.black : const Color(0xFFF3F3F3),
+            color: isSelected
+                ? Colors.black
+                : (isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF3F3F3)),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Text(
             label,
             style: TextStyle(
               fontFamily: 'Jost',
-              color: isSelected ? Colors.white : Colors.black,
+              color: isSelected
+                  ? Colors.white
+                  : (isDark ? Colors.white : Colors.black),
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -157,7 +182,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
     );
   }
 
-  Widget _buildSaveButton() {
+  Widget _buildSaveButton(bool isDark) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: MouseRegion(
@@ -165,18 +190,18 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         child: ElevatedButton(
           onPressed: () => Navigator.pop(context),
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.black,
+            backgroundColor: isDark ? Colors.white : Colors.black,
             minimumSize: const Size(double.infinity, 56),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
             elevation: 0,
           ).copyWith(overlayColor: WidgetStateProperty.all(Colors.transparent)),
-          child: const Text(
+          child: Text(
             "Save Address",
             style: TextStyle(
               fontFamily: 'Jost',
-              color: Colors.white,
+              color: isDark ? Colors.black : Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
@@ -186,13 +211,13 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
     );
   }
 
-  Widget _buildBackButton(BuildContext context) {
+  Widget _buildBackButton(BuildContext context, bool isDark) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: Container(
         margin: const EdgeInsets.only(left: 16, top: 10, bottom: 10),
         decoration: BoxDecoration(
-          color: const Color(0xFFF3F3F3),
+          color: isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF3F3F3),
           borderRadius: BorderRadius.circular(10),
         ),
         child: IconButton(
@@ -202,9 +227,9 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
             overlayColor: WidgetStateProperty.all(Colors.transparent),
           ),
           padding: EdgeInsets.zero,
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_ios_new,
-            color: Colors.black,
+            color: isDark ? Colors.white : Colors.black,
             size: 18,
           ),
         ),

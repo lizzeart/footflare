@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'add_address_screen.dart'; // PASTIKAN IMPORT INI ADA
+import 'add_address_screen.dart';
 
 class AddressListScreen extends StatefulWidget {
   const AddressListScreen({super.key});
@@ -40,47 +40,52 @@ class _AddressListScreenState extends State<AddressListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? const Color(0xFF1E1F28) : Colors.white,
+
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: isDark ? const Color(0xFF1E1F28) : Colors.white,
         elevation: 0,
         centerTitle: true,
         leadingWidth: 52,
         leading: _buildSquareButton(
           icon: Icons.arrow_back_ios_new,
           onPressed: () => Navigator.pop(context),
+          isDark: isDark,
         ),
-        title: const Text(
+        title: Text(
           "Delivery Address",
           style: TextStyle(
             fontFamily: 'Jost',
-            color: Colors.black,
+            color: isDark ? Colors.white : Colors.black,
             fontWeight: FontWeight.w500,
           ),
         ),
       ),
+
       body: Column(
         children: [
           Expanded(
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
-                ...addressList.map((addr) => _buildAddressItem(addr)).toList(),
+                ...addressList.map((addr) => _buildAddressItem(addr, isDark)),
                 const SizedBox(height: 20),
-                // TOMBOL ADD ADDRESS YANG SUDAH DIPERBAIKI
-                _buildAddAddressButton(context),
+                _buildAddAddressButton(context, isDark),
               ],
             ),
           ),
-          _buildSaveButton(),
+          _buildSaveButton(isDark),
         ],
       ),
     );
   }
 
-  Widget _buildAddressItem(Map<String, dynamic> addr) {
+  Widget _buildAddressItem(Map<String, dynamic> addr, bool isDark) {
     bool isSelected = selectedIndex == addr['id'];
+
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
@@ -89,7 +94,10 @@ class _AddressListScreenState extends State<AddressListScreen> {
           padding: const EdgeInsets.symmetric(vertical: 20),
           decoration: BoxDecoration(
             border: Border(
-              bottom: BorderSide(color: Colors.grey.shade100, width: 2.0),
+              bottom: BorderSide(
+                color: isDark ? Colors.grey.shade800 : Colors.grey.shade100,
+                width: 2.0,
+              ),
             ),
           ),
           child: Row(
@@ -109,10 +117,11 @@ class _AddressListScreenState extends State<AddressListScreen> {
                   children: [
                     Text(
                       addr['type'],
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: 'Jost',
                         fontWeight: FontWeight.w600,
                         fontSize: 15,
+                        color: isDark ? Colors.white : Colors.black,
                       ),
                     ),
                     Text(
@@ -130,7 +139,9 @@ class _AddressListScreenState extends State<AddressListScreen> {
                 isSelected
                     ? Icons.radio_button_checked
                     : Icons.radio_button_off,
-                color: isSelected ? Colors.black : Colors.grey.shade300,
+                color: isSelected
+                    ? (isDark ? Colors.white : Colors.black)
+                    : Colors.grey.shade300,
                 size: 24,
               ),
             ],
@@ -140,12 +151,11 @@ class _AddressListScreenState extends State<AddressListScreen> {
     );
   }
 
-  Widget _buildAddAddressButton(BuildContext context) {
+  Widget _buildAddAddressButton(BuildContext context, bool isDark) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () {
-          // NAVIGASI INSTAN KE HALAMAN ADD ADDRESS
           Navigator.push(
             context,
             PageRouteBuilder(
@@ -160,22 +170,34 @@ class _AddressListScreenState extends State<AddressListScreen> {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.grey.shade300, width: 1.5),
+            border: Border.all(
+              color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
+              width: 1.5,
+            ),
           ),
-          child: const Row(
+          child: Row(
             children: [
-              Icon(Icons.add_circle_outline, color: Colors.black, size: 22),
-              SizedBox(width: 12),
+              Icon(
+                Icons.add_circle_outline,
+                color: isDark ? Colors.white : Colors.black,
+                size: 22,
+              ),
+              const SizedBox(width: 12),
               Text(
                 "Add Address",
                 style: TextStyle(
                   fontFamily: 'Jost',
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
+                  color: isDark ? Colors.white : Colors.black,
                 ),
               ),
-              Spacer(),
-              Icon(Icons.arrow_forward_ios, size: 14, color: Colors.black),
+              const Spacer(),
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 14,
+                color: isDark ? Colors.white : Colors.black,
+              ),
             ],
           ),
         ),
@@ -183,7 +205,7 @@ class _AddressListScreenState extends State<AddressListScreen> {
     );
   }
 
-  Widget _buildSaveButton() {
+  Widget _buildSaveButton(bool isDark) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: MouseRegion(
@@ -191,18 +213,18 @@ class _AddressListScreenState extends State<AddressListScreen> {
         child: ElevatedButton(
           onPressed: () => Navigator.pop(context),
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.black,
+            backgroundColor: isDark ? Colors.white : Colors.black,
             minimumSize: const Size(double.infinity, 56),
             elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
           ).copyWith(overlayColor: WidgetStateProperty.all(Colors.transparent)),
-          child: const Text(
+          child: Text(
             "Save Address",
             style: TextStyle(
               fontFamily: 'Jost',
-              color: Colors.white,
+              color: isDark ? Colors.black : Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.w400,
             ),
@@ -215,13 +237,14 @@ class _AddressListScreenState extends State<AddressListScreen> {
   Widget _buildSquareButton({
     required IconData icon,
     required VoidCallback onPressed,
+    required bool isDark,
   }) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: Container(
         margin: const EdgeInsets.only(left: 16, top: 10, bottom: 10),
         decoration: BoxDecoration(
-          color: const Color(0xFFF3F3F3),
+          color: isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF3F3F3),
           borderRadius: BorderRadius.circular(10),
         ),
         child: IconButton(
@@ -230,7 +253,11 @@ class _AddressListScreenState extends State<AddressListScreen> {
             splashFactory: NoSplash.splashFactory,
           ).copyWith(overlayColor: WidgetStateProperty.all(Colors.transparent)),
           padding: EdgeInsets.zero,
-          icon: Icon(icon, color: Colors.black, size: 18),
+          icon: Icon(
+            icon,
+            color: isDark ? Colors.white : Colors.black,
+            size: 18,
+          ),
         ),
       ),
     );

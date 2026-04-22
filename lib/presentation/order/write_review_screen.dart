@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../product_detail/product_detail_page.dart';
+import 'my_order_screen.dart';
 
 class WriteReviewScreen extends StatefulWidget {
   final Map<String, String> item;
@@ -15,21 +16,24 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? const Color(0xFF1E1F28) : Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: isDark ? const Color(0xFF1E1E2C) : Colors.white,
         elevation: 0,
         centerTitle: true,
+        leadingWidth: 52, // ✅ TAMBAH INI
         leading: _buildHeaderButton(
           Icons.arrow_back_ios_new,
           () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           "Write Review",
           style: TextStyle(
             fontFamily: 'Jost',
-            color: Colors.black,
+            color: isDark ? Colors.white : Colors.black,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -38,16 +42,20 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            _buildProductHeader(context, widget.item),
+            _buildProductHeader(context, widget.item, isDark),
             const SizedBox(height: 16),
-            const Divider(thickness: 1, color: Color(0xFFF3F3F3)),
+            Divider(
+              thickness: 1,
+              color: isDark ? Colors.grey.shade800 : const Color(0xFFF3F3F3),
+            ),
             const SizedBox(height: 24),
-            const Text(
+            Text(
               "Overall Rating",
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w600,
                 fontFamily: 'Jost',
+                color: isDark ? Colors.white : Colors.black,
               ),
             ),
             const Text(
@@ -70,17 +78,20 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            _buildInputLabel("Review Title"),
-            _buildTextField(1),
+            _buildInputLabel("Review Title", isDark),
+            _buildTextField(1, isDark),
             const SizedBox(height: 20),
-            _buildInputLabel("Product Review"),
-            _buildTextField(4),
+            _buildInputLabel("Product Review", isDark),
+            _buildTextField(4, isDark),
             const SizedBox(height: 24),
-            const Align(
+            Align(
               alignment: Alignment.centerLeft,
               child: Text(
                 "Would you recommend this product to a friend?",
-                style: TextStyle(fontWeight: FontWeight.w500),
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: isDark ? Colors.white : Colors.black,
+                ),
               ),
             ),
             Row(
@@ -88,20 +99,26 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
                 Radio(
                   value: "Yes",
                   groupValue: recommendation,
-                  activeColor: Colors.black,
+                  activeColor: isDark ? Colors.white : Colors.black,
                   onChanged: (v) =>
                       setState(() => recommendation = v.toString()),
                 ),
-                const Text("Yes"),
+                Text(
+                  "Yes",
+                  style: TextStyle(color: isDark ? Colors.white : Colors.black),
+                ),
                 const SizedBox(width: 16),
                 Radio(
                   value: "No",
                   groupValue: recommendation,
-                  activeColor: Colors.black,
+                  activeColor: isDark ? Colors.white : Colors.black,
                   onChanged: (v) =>
                       setState(() => recommendation = v.toString()),
                 ),
-                const Text("No"),
+                Text(
+                  "No",
+                  style: TextStyle(color: isDark ? Colors.white : Colors.black),
+                ),
               ],
             ),
           ],
@@ -110,10 +127,15 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16),
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const MyOrderScreen()),
+            );
+          },
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.black,
-            foregroundColor: Colors.white,
+            backgroundColor: isDark ? Colors.white : Colors.black,
+            foregroundColor: isDark ? Colors.black : Colors.white,
             minimumSize: const Size(double.infinity, 54),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
@@ -133,26 +155,42 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
   }
 
   Widget _buildHeaderButton(IconData icon, VoidCallback onTap) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: Container(
-        margin: const EdgeInsets.all(10),
+        margin: const EdgeInsets.only(
+          left: 16, // ✅ SAMA PERSIS
+          top: 10,
+          bottom: 10,
+        ),
         decoration: BoxDecoration(
-          color: const Color(0xFFF3F3F3),
+          color: isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF3F3F3),
           borderRadius: BorderRadius.circular(10),
         ),
         child: IconButton(
           onPressed: onTap,
-          icon: Icon(icon, color: Colors.black, size: 18),
+          style: ButtonStyle(
+            overlayColor: WidgetStateProperty.all(Colors.transparent),
+            splashFactory: NoSplash.splashFactory,
+          ),
           padding: EdgeInsets.zero,
+          icon: Icon(
+            icon,
+            color: isDark ? Colors.white : Colors.black,
+            size: 18,
+          ),
         ),
       ),
     );
   }
 
-  // Cari bagian ini di track_order_screen.dart (biasanya di bagian bawah)
-
-  Widget _buildProductHeader(BuildContext context, Map<String, String> item) {
+  Widget _buildProductHeader(
+    BuildContext context,
+    Map<String, String> item,
+    bool isDark,
+  ) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -175,20 +213,20 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
               width: 100,
               height: 100,
               decoration: BoxDecoration(
-                color: const Color(0xFFF3F3F3),
+                color: isDark
+                    ? const Color(0xFF2A2D3A)
+                    : const Color(0xFFF3F3F3),
                 borderRadius: BorderRadius.circular(12),
               ),
-              // --- GANTI DI SINI ---
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.asset(
-                  item['image']!, // Pastikan di layar sebelumnya kamu sudah kirim key 'image'
+                  item['image']!,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) =>
                       const Icon(Icons.broken_image, color: Colors.grey),
                 ),
               ),
-              // ---------------------
             ),
           ),
         ),
@@ -201,19 +239,21 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
               children: [
                 Text(
                   item['name']!,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Jost',
                     fontWeight: FontWeight.w500,
                     fontSize: 15,
+                    color: isDark ? Colors.white : Colors.black,
                   ),
                 ),
                 Row(
                   children: [
                     Text(
                       "\$${item['price']}",
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
+                        color: isDark ? Colors.white : Colors.black,
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -252,10 +292,16 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
                       child: Container(
                         padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF3F3F3),
+                          color: isDark
+                              ? const Color(0xFF2A2D3A)
+                              : const Color(0xFFF3F3F3),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Icon(Icons.arrow_forward, size: 18),
+                        child: Icon(
+                          Icons.arrow_forward,
+                          size: 18,
+                          color: isDark ? Colors.white : Colors.black,
+                        ),
                       ),
                     ),
                   ),
@@ -268,25 +314,36 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
     );
   }
 
-  Widget _buildInputLabel(String label) => Align(
+  Widget _buildInputLabel(String label, bool isDark) => Align(
     alignment: Alignment.centerLeft,
     child: Padding(
       padding: const EdgeInsets.only(bottom: 8),
-      child: Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontWeight: FontWeight.w500,
+          color: isDark ? Colors.white : Colors.black,
+        ),
+      ),
     ),
   );
 
-  Widget _buildTextField(int lines) => TextField(
+  Widget _buildTextField(int lines, bool isDark) => TextField(
     maxLines: lines,
+    style: TextStyle(color: isDark ? Colors.white : Colors.black),
     decoration: InputDecoration(
       contentPadding: const EdgeInsets.all(12),
+      filled: true,
+      fillColor: isDark ? const Color(0xFF2A2D3A) : Colors.white,
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFFD9D9D9)),
+        borderSide: BorderSide(
+          color: isDark ? Colors.grey.shade700 : const Color(0xFFD9D9D9),
+        ),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Colors.black),
+        borderSide: BorderSide(color: isDark ? Colors.white : Colors.black),
       ),
     ),
   );

@@ -21,6 +21,8 @@ class CheckoutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     double subtotal = items.fold(
       0.0,
       (sum, item) => sum + (item['price'] * item['qty']),
@@ -29,22 +31,24 @@ class CheckoutScreen extends StatelessWidget {
     double totalOrder = subtotal - discount;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? const Color(0xFF1E1F28) : Colors.white,
+
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: isDark ? const Color(0xFF1E1F28) : Colors.white,
         elevation: 0,
         centerTitle: true,
         leadingWidth: 52,
-        leading: _buildBackButton(context),
-        title: const Text(
+        leading: _buildBackButton(context, isDark),
+        title: Text(
           "Checkout",
           style: TextStyle(
             fontFamily: 'Jost',
-            color: Colors.black,
+            color: isDark ? Colors.white : Colors.black,
             fontWeight: FontWeight.w500,
           ),
         ),
       ),
+
       body: Column(
         children: [
           Expanded(
@@ -53,7 +57,6 @@ class CheckoutScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // --- SECTION ADDRESS & PAYMENT DENGAN PEMISAH GARIS ---
                   _buildListTile(
                     context,
                     icon: Icons.location_on,
@@ -61,95 +64,119 @@ class CheckoutScreen extends StatelessWidget {
                     subtitle: "123 Main Street, Anytown, USA 12345",
                     onTap: () =>
                         _navigateTo(context, const AddressListScreen()),
+                    isDark: isDark,
                   ),
-                  const Divider(
+
+                  Divider(
                     height: 1,
                     thickness: 1.5,
-                    color: Color(0xFFF3F3F3),
+                    color: isDark
+                        ? Colors.grey.shade800
+                        : const Color(0xFFF3F3F3),
                   ),
-                  // Di checkout_screen.dart, pada bagian tombol Payment Tile
+
                   _buildListTile(
                     context,
                     icon: Icons.account_balance_wallet,
                     title: "Payment",
                     subtitle: "XXXX XXXX XXXX 3456",
-                    // UBAH NAVIGASI DISINI
                     onTap: () => _navigateTo(context, const PaymentScreen()),
+                    isDark: isDark,
                   ),
 
-                  // ------------------------------------------------------
                   const SizedBox(height: 24),
-                  const Text(
+
+                  Text(
                     "Additional Notes:",
                     style: TextStyle(
                       fontFamily: 'Jost',
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
+                      color: isDark ? Colors.white : Colors.black,
                     ),
                   ),
+
                   const SizedBox(height: 12),
-                  _buildNoteField(),
+
+                  _buildNoteField(isDark),
                 ],
               ),
             ),
           ),
 
-          // --- SECTION RINGKASAN HARGA (RATA BAWAH) ---
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: const BoxDecoration(
-              color: Colors.white,
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF1E1F28) : Colors.white,
               border: Border(
-                top: BorderSide(color: Color(0xFFF3F3F3), width: 1),
+                top: BorderSide(
+                  color: isDark
+                      ? Colors.grey.shade800
+                      : const Color(0xFFF3F3F3),
+                  width: 1,
+                ),
               ),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ...items
-                    .map(
-                      (item) => _buildSummaryRow(
-                        item['name'],
-                        "${item['qty']} x \$${(item['price'] as num).toStringAsFixed(2)}",
-                        isBold: true,
-                      ),
-                    )
-                    .toList(),
+                ...items.map(
+                  (item) => _buildSummaryRow(
+                    item['name'],
+                    "${item['qty']} x \$${(item['price'] as num).toStringAsFixed(2)}",
+                    isBold: true,
+                    isDark: isDark,
+                  ),
+                ),
+
                 _buildSummaryRow(
                   "Discount",
                   "-\$${discount.toStringAsFixed(2)}",
                   isBold: true,
+                  isDark: isDark,
                 ),
+
                 _buildSummaryRow(
                   "Shipping",
                   "FREE Delivery",
                   isGreen: true,
                   isBold: true,
+                  isDark: isDark,
                 ),
-                const Divider(height: 30, thickness: 1.5, color: Colors.black),
+
+                Divider(
+                  height: 30,
+                  thickness: 1.5,
+                  color: isDark ? Colors.white : Colors.black,
+                ),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       "My Order",
                       style: TextStyle(
                         fontFamily: 'Jost',
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
+                        color: isDark ? Colors.white : Colors.black,
                       ),
                     ),
                     Text(
                       "\$${totalOrder.toStringAsFixed(2)}",
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: 'Jost',
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
+                        color: isDark ? Colors.white : Colors.black,
                       ),
                     ),
                   ],
                 ),
+
                 const SizedBox(height: 16),
-                _buildSubmitButton(context),
+
+                _buildSubmitButton(context, isDark),
               ],
             ),
           ),
@@ -164,6 +191,7 @@ class CheckoutScreen extends StatelessWidget {
     required String title,
     required String subtitle,
     required VoidCallback onTap,
+    required bool isDark,
   }) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
@@ -189,10 +217,11 @@ class CheckoutScreen extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: 'Jost',
                         fontWeight: FontWeight.w600,
                         fontSize: 15,
+                        color: isDark ? Colors.white : Colors.black,
                       ),
                     ),
                     Text(
@@ -206,10 +235,10 @@ class CheckoutScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(
+              Icon(
                 Icons.arrow_forward_ios,
                 size: 14,
-                color: Colors.black,
+                color: isDark ? Colors.white : Colors.black,
               ),
             ],
           ),
@@ -223,6 +252,7 @@ class CheckoutScreen extends StatelessWidget {
     String value, {
     bool isGreen = false,
     bool isBold = false,
+    required bool isDark,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -235,7 +265,7 @@ class CheckoutScreen extends StatelessWidget {
               style: TextStyle(
                 fontFamily: 'Jost',
                 fontSize: 15,
-                fontWeight: isBold ? FontWeight.w400 : FontWeight.w400,
+                color: isDark ? Colors.white : Colors.black,
               ),
             ),
           ),
@@ -244,8 +274,9 @@ class CheckoutScreen extends StatelessWidget {
             style: TextStyle(
               fontFamily: 'Jost',
               fontSize: 15,
-              color: isGreen ? Colors.green : Colors.black,
-              fontWeight: isBold ? FontWeight.w400 : FontWeight.w400,
+              color: isGreen
+                  ? Colors.green
+                  : (isDark ? Colors.white : Colors.black),
             ),
           ),
         ],
@@ -253,7 +284,7 @@ class CheckoutScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSubmitButton(BuildContext context) {
+  Widget _buildSubmitButton(BuildContext context, bool isDark) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: ElevatedButton(
@@ -269,18 +300,18 @@ class CheckoutScreen extends StatelessWidget {
           );
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.black,
+          backgroundColor: isDark ? Colors.white : Colors.black,
           minimumSize: const Size(double.infinity, 56),
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
         ).copyWith(overlayColor: WidgetStateProperty.all(Colors.transparent)),
-        child: const Text(
+        child: Text(
           "Submit Order",
           style: TextStyle(
             fontFamily: 'Jost',
-            color: Colors.white,
+            color: isDark ? Colors.black : Colors.white,
             fontSize: 16,
             fontWeight: FontWeight.w400,
           ),
@@ -289,13 +320,13 @@ class CheckoutScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBackButton(BuildContext context) {
+  Widget _buildBackButton(BuildContext context, bool isDark) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: Container(
         margin: const EdgeInsets.only(left: 16, top: 10, bottom: 10),
         decoration: BoxDecoration(
-          color: const Color(0xFFF3F3F3),
+          color: isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF3F3F3),
           borderRadius: BorderRadius.circular(10),
         ),
         child: IconButton(
@@ -305,9 +336,9 @@ class CheckoutScreen extends StatelessWidget {
             overlayColor: WidgetStateProperty.all(Colors.transparent),
           ),
           padding: EdgeInsets.zero,
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_ios_new,
-            color: Colors.black,
+            color: isDark ? Colors.white : Colors.black,
             size: 18,
           ),
         ),
@@ -315,10 +346,13 @@ class CheckoutScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildNoteField() {
+  Widget _buildNoteField(bool isDark) {
     return TextField(
       maxLines: 3,
-      style: const TextStyle(fontFamily: 'Jost'),
+      style: TextStyle(
+        fontFamily: 'Jost',
+        color: isDark ? Colors.white : Colors.black,
+      ),
       decoration: InputDecoration(
         hintText: "Write Here",
         hintStyle: const TextStyle(
@@ -327,14 +361,20 @@ class CheckoutScreen extends StatelessWidget {
           fontWeight: FontWeight.w500,
         ),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: isDark ? const Color(0xFF2A2D3A) : Colors.white,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFFF3F3F3), width: 1.5),
+          borderSide: BorderSide(
+            color: isDark ? Colors.grey.shade700 : const Color(0xFFF3F3F3),
+            width: 1.5,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.black, width: 1.5),
+          borderSide: BorderSide(
+            color: isDark ? Colors.white : Colors.black,
+            width: 1.5,
+          ),
         ),
       ),
     );

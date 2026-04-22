@@ -16,10 +16,13 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? const Color(0xFF1E1F28) : Colors.white,
+
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: isDark ? const Color(0xFF1E1F28) : Colors.white,
         elevation: 0,
         centerTitle: true,
         leadingWidth: 52,
@@ -28,7 +31,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
           child: Container(
             margin: const EdgeInsets.only(left: 16, top: 10, bottom: 10),
             decoration: BoxDecoration(
-              color: const Color(0xFFF3F3F3),
+              color: isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF3F3F3),
               borderRadius: BorderRadius.circular(10),
             ),
             child: IconButton(
@@ -38,19 +41,19 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
                 splashFactory: NoSplash.splashFactory,
               ),
               padding: EdgeInsets.zero,
-              icon: const Icon(
+              icon: Icon(
                 Icons.arrow_back_ios_new,
-                color: Colors.black,
+                color: isDark ? Colors.white : Colors.black,
                 size: 18,
               ),
             ),
           ),
         ),
-        title: const Text(
+        title: Text(
           "My Order",
           style: TextStyle(
             fontFamily: 'Jost',
-            color: Colors.black,
+            color: isDark ? Colors.white : Colors.black,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -61,17 +64,17 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
               margin: const EdgeInsets.only(right: 16, top: 10, bottom: 10),
               width: 36,
               decoration: BoxDecoration(
-                color: const Color(0xFFF3F3F3),
+                color: isDark
+                    ? const Color(0xFF2A2D3A)
+                    : const Color(0xFFF3F3F3),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: IconButton(
                 onPressed: () {
-                  // Fungsi ini akan pindah ke MainScreen dan menghapus semua halaman sebelumnya
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => const MainScreen()),
-                    (route) =>
-                        false, // Ini yang tadi kita bahas untuk hapus semua stack
+                    (route) => false,
                   );
                 },
                 style: ButtonStyle(
@@ -79,9 +82,9 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
                   splashFactory: NoSplash.splashFactory,
                 ),
                 padding: EdgeInsets.zero,
-                icon: const Icon(
+                icon: Icon(
                   Icons.home_filled,
-                  color: Colors.black,
+                  color: isDark ? Colors.white : Colors.black,
                   size: 18,
                 ),
               ),
@@ -97,43 +100,53 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
                 Expanded(
                   child: _buildTabButton("Ongoing", isOngoingSelected, () {
                     setState(() => isOngoingSelected = true);
-                  }),
+                  }, isDark),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: _buildTabButton("Completed", !isOngoingSelected, () {
                     setState(() => isOngoingSelected = false);
-                  }),
+                  }, isDark),
                 ),
               ],
             ),
           ),
         ),
       ),
-      // Efek Fade In/Out saat berganti konten
+
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),
         child: OrderList(
-          key: ValueKey<bool>(isOngoingSelected), // Key agar animasi terpicu
+          key: ValueKey<bool>(isOngoingSelected),
           isOngoing: isOngoingSelected,
         ),
       ),
     );
   }
 
-  Widget _buildTabButton(String label, bool isActive, VoidCallback onTap) {
+  Widget _buildTabButton(
+    String label,
+    bool isActive,
+    VoidCallback onTap,
+    bool isDark,
+  ) {
     return MouseRegion(
-      cursor: SystemMouseCursors.click, // Kursor jadi telunjuk
+      cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: onTap,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 250), // Animasi invert warna
+          duration: const Duration(milliseconds: 250),
           height: 45,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: isActive ? Colors.black : Colors.white,
+            color: isActive
+                ? Colors.black
+                : (isDark ? const Color(0xFF1E1F28) : Colors.white),
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Colors.black, width: 1),
+            border: Border.all(
+              color: isDark ? Colors.white : Colors.black,
+              width: 1,
+            ),
           ),
           child: Text(
             label,
@@ -141,7 +154,9 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
               fontFamily: 'Jost',
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: isActive ? Colors.white : Colors.black,
+              color: isActive
+                  ? Colors.white
+                  : (isDark ? Colors.white : Colors.black),
             ),
           ),
         ),
@@ -156,6 +171,8 @@ class OrderList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     final List<Map<String, String>> dummyOrders = [
       {
         "name": "Echo Vibe Urban Runners",
@@ -177,18 +194,18 @@ class OrderList extends StatelessWidget {
     return ListView.separated(
       padding: const EdgeInsets.all(16),
       itemCount: dummyOrders.length,
-      separatorBuilder: (context, index) => const Divider(
+      separatorBuilder: (context, index) => Divider(
         height: 40,
         thickness: 2,
-        color: Color.fromARGB(255, 223, 223, 223),
+        color: isDark
+            ? Colors.grey.shade800
+            : const Color.fromARGB(255, 223, 223, 223),
       ),
-      // Di dalam itemBuilder pada MyOrderScreen
       itemBuilder: (context, index) {
         final item = dummyOrders[index];
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // FOTO PRODUK (Navigasi ke Detail & Kursor Telunjuk)
             MouseRegion(
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
@@ -210,7 +227,9 @@ class OrderList extends StatelessWidget {
                   width: 100,
                   height: 100,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF3F3F3),
+                    color: isDark
+                        ? const Color(0xFF2A2D3A)
+                        : const Color(0xFFF3F3F3),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: ClipRRect(
@@ -231,17 +250,17 @@ class OrderList extends StatelessWidget {
             ),
             const SizedBox(width: 16),
 
-            // INFORMASI PRODUK
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     item['name']!,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'Jost',
                       fontWeight: FontWeight.w500,
                       fontSize: 15,
+                      color: isDark ? Colors.white : Colors.black,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -249,13 +268,13 @@ class OrderList extends StatelessWidget {
                     children: [
                       Text(
                         "\$${item['price']}",
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
+                          color: isDark ? Colors.white : Colors.black,
                         ),
                       ),
                       const SizedBox(width: 8),
-                      // Penambahan teks FREE Delivery sesuai gambar
                       const Text(
                         "FREE Delivery",
                         style: TextStyle(
@@ -272,7 +291,6 @@ class OrderList extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
 
-                  // TOMBOL TRACK ORDER / WRITE REVIEW
                   Align(
                     alignment: Alignment.centerRight,
                     child: ElevatedButton(
@@ -297,19 +315,24 @@ class OrderList extends StatelessWidget {
                       },
                       style:
                           ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFF3F3F3),
-                            foregroundColor: Colors.black,
+                            backgroundColor: isDark
+                                ? const Color(0xFF2A2D3A)
+                                : const Color(0xFFF3F3F3),
+                            foregroundColor: isDark
+                                ? Colors.white
+                                : Colors.black,
                             elevation: 0,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ).copyWith(
-                            // Efek Gelap saat Hover
                             overlayColor:
                                 WidgetStateProperty.resolveWith<Color?>(
                                   (states) =>
                                       states.contains(WidgetState.hovered)
-                                      ? Colors.black.withOpacity(0.05)
+                                      ? (isDark
+                                            ? Colors.white.withOpacity(0.1)
+                                            : Colors.black.withOpacity(0.05))
                                       : null,
                                 ),
                           ),

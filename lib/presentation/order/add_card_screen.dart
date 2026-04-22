@@ -8,7 +8,6 @@ class AddCardScreen extends StatefulWidget {
 }
 
 class _AddCardScreenState extends State<AddCardScreen> {
-  // Controller untuk menangkap input
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _numberController = TextEditingController();
   final TextEditingController _expiryController = TextEditingController();
@@ -25,20 +24,21 @@ class _AddCardScreenState extends State<AddCardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? const Color(0xFF1C1F2A) : Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: isDark ? const Color(0xFF1C1F2A) : Colors.white,
         elevation: 0,
         centerTitle: true,
         leadingWidth: 52,
-        // Tombol kembali kotak abu-abu (simetri dengan halaman lain)
-        leading: _buildSquareBackButton(context),
-        title: const Text(
+        leading: _buildSquareBackButton(context, isDark),
+        title: Text(
           "Add Card",
           style: TextStyle(
             fontFamily: 'Jost',
-            color: Colors.black,
+            color: isDark ? Colors.white : Colors.black,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -51,45 +51,47 @@ class _AddCardScreenState extends State<AddCardScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // --- KARTU VISUAL (MERAH MARUN) SESUAI GAMBAR ---
                   _buildVisualCard(),
                   const SizedBox(height: 24),
 
-                  // --- FORMULIR INPUT ---
-                  _buildInputLabel("Card Name"),
-                  _buildInputField(_nameController, "Roopa Smith"),
+                  _buildInputLabel("Card Name", isDark),
+                  _buildInputField(_nameController, "Roopa Smith", isDark),
 
                   const SizedBox(height: 16),
-                  _buildInputLabel("Card Number"),
+                  _buildInputLabel("Card Number", isDark),
                   _buildInputField(
                     _numberController,
                     "**** **** **** 4532",
+                    isDark,
                     isNumber: true,
                   ),
 
                   const SizedBox(height: 16),
                   Row(
                     children: [
-                      // Expired Date (Kiri)
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildInputLabel("Expiry Date"),
-                            _buildInputField(_expiryController, "mm/dd/yyyy"),
+                            _buildInputLabel("Expiry Date", isDark),
+                            _buildInputField(
+                              _expiryController,
+                              "mm/dd/yyyy",
+                              isDark,
+                            ),
                           ],
                         ),
                       ),
                       const SizedBox(width: 16),
-                      // CVV (Kanan)
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildInputLabel("CVV"),
+                            _buildInputLabel("CVV", isDark),
                             _buildInputField(
                               _cvvController,
                               "012",
+                              isDark,
                               isNumber: true,
                               isObscure: true,
                             ),
@@ -102,23 +104,19 @@ class _AddCardScreenState extends State<AddCardScreen> {
               ),
             ),
           ),
-
-          // --- TOMBOL ADD CARD (RATA BAWAH) ---
-          _buildAddCardButton(),
+          _buildAddCardButton(isDark),
         ],
       ),
     );
   }
 
-  // --- WIDGET HELPER ---
-
-  // 1. Kartu Visual Merah Marun
+  // --- VISUAL CARD (TIDAK DIUBAH) ---
   Widget _buildVisualCard() {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF8D1C3D), // Warna merah marun sesuai gambar
+        color: const Color(0xFF8D1C3D),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -133,10 +131,8 @@ class _AddCardScreenState extends State<AddCardScreen> {
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 13,
-                  letterSpacing: 0.5,
                 ),
               ),
-              // Logo Visa Putih
               Text(
                 "VISA",
                 style: TextStyle(
@@ -149,7 +145,6 @@ class _AddCardScreenState extends State<AddCardScreen> {
             ],
           ),
           const SizedBox(height: 30),
-          // Nomor Kartu Besar
           const Text(
             "**** **** **** 4532",
             style: TextStyle(
@@ -162,9 +157,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
           const SizedBox(height: 30),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              // Nama Pemegang Kartu (Kiri Bawah)
               const Text(
                 "ROOPA SMITH",
                 style: TextStyle(
@@ -173,7 +166,6 @@ class _AddCardScreenState extends State<AddCardScreen> {
                   fontSize: 14,
                 ),
               ),
-              // Exp & CVV (Kanan Bawah)
               Row(
                 children: [
                   _buildCardInfoPair("EXP", "14/07"),
@@ -188,51 +180,46 @@ class _AddCardScreenState extends State<AddCardScreen> {
     );
   }
 
-  // Helper untuk teks kecil di dalam kartu (EXP/CVV)
   Widget _buildCardInfoPair(String label, String value) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: const TextStyle(
-            color: Colors.white70,
-            fontSize: 10,
-            fontWeight: FontWeight.w500,
-          ),
+        const Text(
+          "EXP",
+          style: TextStyle(color: Colors.white70, fontSize: 10),
         ),
         Text(
           value,
           style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
-            fontSize: 13,
           ),
         ),
       ],
     );
   }
 
-  // 2. Label Input (Jost, w500)
-  Widget _buildInputLabel(String label) {
+  // --- LABEL ---
+  Widget _buildInputLabel(String label, bool isDark) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Text(
         label,
-        style: const TextStyle(
+        style: TextStyle(
           fontFamily: 'Jost',
           fontWeight: FontWeight.w500,
           fontSize: 14,
-          color: Colors.black,
+          color: isDark ? Colors.white : Colors.black,
         ),
       ),
     );
   }
 
-  // 3. Input Field (Garis lebih tebal, tanpa shadow hover)
+  // --- INPUT ---
   Widget _buildInputField(
     TextEditingController controller,
-    String hint, {
+    String hint,
+    bool isDark, {
     bool isNumber = false,
     bool isObscure = false,
   }) {
@@ -240,65 +227,67 @@ class _AddCardScreenState extends State<AddCardScreen> {
       controller: controller,
       keyboardType: isNumber ? TextInputType.number : TextInputType.text,
       obscureText: isObscure,
-      style: const TextStyle(fontFamily: 'Jost', fontSize: 15),
+      style: TextStyle(
+        fontFamily: 'Jost',
+        fontSize: 15,
+        color: isDark ? Colors.white : Colors.black,
+      ),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: const TextStyle(
-          fontFamily: 'Jost',
-          color: Colors.grey,
-          fontWeight: FontWeight.w400,
-        ),
+        hintStyle: TextStyle(color: Colors.grey),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: isDark ? const Color(0xFF2A2D3A) : Colors.white,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 14,
         ),
-        // Garis border dipertebal (1.5)
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
+          borderSide: BorderSide(
+            color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
+            width: 1.5,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Colors.black, width: 1.5),
+          borderSide: BorderSide(
+            color: isDark ? Colors.white : Colors.black,
+            width: 1.5,
+          ),
         ),
       ),
     );
   }
 
-  // 4. Tombol Add Card (Rata bawah, No shadow hover)
-  Widget _buildAddCardButton() {
+  // --- BUTTON ---
+  Widget _buildAddCardButton(bool isDark) {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(top: BorderSide(color: Color(0xFFF3F3F3))),
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF1C1F2A) : Colors.white,
+        border: Border(
+          top: BorderSide(
+            color: isDark ? Colors.grey.shade800 : const Color(0xFFF3F3F3),
+          ),
+        ),
       ),
       child: MouseRegion(
         cursor: SystemMouseCursors.click,
         child: ElevatedButton(
-          onPressed: () {
-            // Aksi simpan kartu
-            Navigator.pop(context);
-          },
-          style:
-              ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                minimumSize: const Size(double.infinity, 56),
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ).copyWith(
-                // Menghilangkan efek hover/shadow
-                overlayColor: WidgetStateProperty.all(Colors.transparent),
-              ),
-          child: const Text(
+          onPressed: () => Navigator.pop(context),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: isDark ? Colors.white : Colors.black,
+            minimumSize: const Size(double.infinity, 56),
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ).copyWith(overlayColor: WidgetStateProperty.all(Colors.transparent)),
+          child: Text(
             "Add Card",
             style: TextStyle(
               fontFamily: 'Jost',
-              color: Colors.white,
+              color: isDark ? Colors.black : Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
@@ -308,23 +297,26 @@ class _AddCardScreenState extends State<AddCardScreen> {
     );
   }
 
-  // Tombol Kembali Kotak (Simetri)
-  Widget _buildSquareBackButton(BuildContext context) {
+  // --- BACK BUTTON ---
+  Widget _buildSquareBackButton(BuildContext context, bool isDark) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: Container(
         margin: const EdgeInsets.only(left: 16, top: 10, bottom: 10),
         decoration: BoxDecoration(
-          color: const Color(0xFFF3F3F3),
+          color: isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF3F3F3),
           borderRadius: BorderRadius.circular(10),
         ),
         child: IconButton(
           onPressed: () => Navigator.pop(context),
-          style: const ButtonStyle(splashFactory: NoSplash.splashFactory),
+          style: ButtonStyle(
+            splashFactory: NoSplash.splashFactory,
+            overlayColor: WidgetStateProperty.all(Colors.transparent),
+          ),
           padding: EdgeInsets.zero,
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_ios_new,
-            color: Colors.black,
+            color: isDark ? Colors.white : Colors.black,
             size: 18,
           ),
         ),

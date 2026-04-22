@@ -7,47 +7,62 @@ class TrackOrderScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? const Color(0xFF1E1F28) : Colors.white,
+
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: isDark ? const Color(0xFF1E1F28) : Colors.white,
         elevation: 0,
+        leadingWidth: 52,
         centerTitle: true,
-        leading: _buildHeaderButton(context, Icons.arrow_back_ios_new),
-        title: const Text(
+        leading: _buildHeaderButton(context, Icons.arrow_back_ios_new, isDark),
+        title: Text(
           "Track Order",
           style: TextStyle(
             fontFamily: 'Jost',
-            color: Colors.black,
+            color: isDark ? Colors.white : Colors.black,
             fontWeight: FontWeight.w500,
           ),
         ),
       ),
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildProductHeader(context, item),
+            _buildProductHeader(context, item, isDark),
+
             const SizedBox(height: 16),
-            const Divider(thickness: 1, color: Color(0xFFF3F3F3)),
+
+            Divider(
+              thickness: 1,
+              color: isDark ? Colors.grey.shade800 : const Color(0xFFF3F3F3),
+            ),
+
             const SizedBox(height: 24),
-            const Text(
+
+            Text(
               "Track order",
               style: TextStyle(
                 fontFamily: 'Jost',
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
+                color: isDark ? Colors.white : Colors.black,
               ),
             ),
+
             const SizedBox(height: 24),
-            // Mengembalikan menjadi 5 proses sesuai gambar referensi
+
             _buildTimelineStep(
               "Order Placed",
               "We have received your order",
               "27 Dec 2023",
               true,
               false,
+              isDark,
             ),
             _buildTimelineStep(
               "Order Confirm",
@@ -55,6 +70,7 @@ class TrackOrderScreen extends StatelessWidget {
               "27 Dec 2023",
               true,
               false,
+              isDark,
             ),
             _buildTimelineStep(
               "Order Processed",
@@ -62,6 +78,7 @@ class TrackOrderScreen extends StatelessWidget {
               "28 Dec 2023",
               false,
               false,
+              isDark,
             ),
             _buildTimelineStep(
               "Ready To Ship",
@@ -69,6 +86,7 @@ class TrackOrderScreen extends StatelessWidget {
               "29 Dec 2023",
               false,
               false,
+              isDark,
             ),
             _buildTimelineStep(
               "Out For Delivery",
@@ -76,6 +94,7 @@ class TrackOrderScreen extends StatelessWidget {
               "31 Dec 2023",
               false,
               true,
+              isDark,
             ),
           ],
         ),
@@ -83,27 +102,37 @@ class TrackOrderScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeaderButton(BuildContext context, IconData icon) {
+  Widget _buildHeaderButton(BuildContext context, IconData icon, bool isDark) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: Container(
-        margin: const EdgeInsets.all(10),
+        margin: const EdgeInsets.only(left: 16, top: 10, bottom: 10),
         decoration: BoxDecoration(
-          color: const Color(0xFFF3F3F3),
+          color: isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF3F3F3),
           borderRadius: BorderRadius.circular(10),
         ),
         child: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: Icon(icon, color: Colors.black, size: 18),
+          style: ButtonStyle(
+            overlayColor: WidgetStateProperty.all(Colors.transparent),
+            splashFactory: NoSplash.splashFactory,
+          ),
           padding: EdgeInsets.zero,
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            color: isDark ? Colors.white : Colors.black,
+            size: 18,
+          ),
         ),
       ),
     );
   }
 
-  // Cari bagian ini di track_order_screen.dart (biasanya di bagian bawah)
-
-  Widget _buildProductHeader(BuildContext context, Map<String, String> item) {
+  Widget _buildProductHeader(
+    BuildContext context,
+    Map<String, String> item,
+    bool isDark,
+  ) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -126,20 +155,20 @@ class TrackOrderScreen extends StatelessWidget {
               width: 100,
               height: 100,
               decoration: BoxDecoration(
-                color: const Color(0xFFF3F3F3),
+                color: isDark
+                    ? const Color(0xFF2A2D3A)
+                    : const Color(0xFFF3F3F3),
                 borderRadius: BorderRadius.circular(12),
               ),
-              // --- GANTI DI SINI ---
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.asset(
-                  item['image']!, // Pastikan di layar sebelumnya kamu sudah kirim key 'image'
+                  item['image']!,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) =>
                       const Icon(Icons.broken_image, color: Colors.grey),
                 ),
               ),
-              // ---------------------
             ),
           ),
         ),
@@ -152,19 +181,21 @@ class TrackOrderScreen extends StatelessWidget {
               children: [
                 Text(
                   item['name']!,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Jost',
                     fontWeight: FontWeight.w500,
                     fontSize: 15,
+                    color: isDark ? Colors.white : Colors.black,
                   ),
                 ),
                 Row(
                   children: [
                     Text(
                       "\$${item['price']}",
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
+                        color: isDark ? Colors.white : Colors.black,
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -203,10 +234,16 @@ class TrackOrderScreen extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF3F3F3),
+                          color: isDark
+                              ? const Color(0xFF2A2D3A)
+                              : const Color(0xFFF3F3F3),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Icon(Icons.arrow_forward, size: 18),
+                        child: Icon(
+                          Icons.arrow_forward,
+                          size: 18,
+                          color: isDark ? Colors.white : Colors.black,
+                        ),
                       ),
                     ),
                   ),
@@ -225,6 +262,7 @@ class TrackOrderScreen extends StatelessWidget {
     String date,
     bool isDone,
     bool isLast,
+    bool isDark,
   ) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -236,7 +274,9 @@ class TrackOrderScreen extends StatelessWidget {
               height: 24,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: isDone ? const Color(0xFFB3261E) : Colors.white,
+                color: isDone
+                    ? const Color(0xFFB3261E)
+                    : (isDark ? const Color(0xFF1E1F28) : Colors.white),
                 border: Border.all(
                   color: isDone ? const Color(0xFFB3261E) : Colors.grey,
                 ),
@@ -249,7 +289,9 @@ class TrackOrderScreen extends StatelessWidget {
               Container(
                 width: 2,
                 height: 50,
-                color: isDone ? const Color(0xFFB3261E) : Colors.grey[300],
+                color: isDone
+                    ? const Color(0xFFB3261E)
+                    : (isDark ? Colors.grey.shade700 : Colors.grey[300]),
               ),
           ],
         ),
@@ -265,7 +307,9 @@ class TrackOrderScreen extends StatelessWidget {
                     style: TextStyle(
                       fontFamily: 'Jost',
                       fontWeight: FontWeight.bold,
-                      color: isDone ? const Color(0xFFB3261E) : Colors.black,
+                      color: isDone
+                          ? const Color(0xFFB3261E)
+                          : (isDark ? Colors.white : Colors.black),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -275,7 +319,13 @@ class TrackOrderScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              Text(sub, style: const TextStyle(fontSize: 13)),
+              Text(
+                sub,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: isDark ? Colors.white70 : Colors.black,
+                ),
+              ),
               const SizedBox(height: 20),
             ],
           ),

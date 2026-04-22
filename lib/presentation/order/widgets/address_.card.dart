@@ -5,11 +5,23 @@ class AddressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Card(
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Card(
+      color: isDark ? const Color(0xFF2A2D3A) : Colors.white,
       child: ListTile(
-        leading: Icon(Icons.location_on),
-        title: Text("Nama Alamat"),
-        subtitle: Text("Detail Alamat Lengkap..."),
+        leading: Icon(
+          Icons.location_on,
+          color: isDark ? Colors.white : Colors.black,
+        ),
+        title: Text(
+          "Nama Alamat",
+          style: TextStyle(color: isDark ? Colors.white : Colors.black),
+        ),
+        subtitle: const Text(
+          "Detail Alamat Lengkap...",
+          style: TextStyle(color: Colors.grey),
+        ),
       ),
     );
   }

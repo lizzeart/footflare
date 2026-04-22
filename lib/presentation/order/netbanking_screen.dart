@@ -5,21 +5,23 @@ class NetbankingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.close, color: Colors.black),
+          icon: Icon(Icons.close, color: isDark ? Colors.white : Colors.black),
         ),
-        title: const Text(
+        title: Text(
           "Net Banking",
           style: TextStyle(
             fontFamily: 'Jost',
-            color: Colors.black,
+            color: isDark ? Colors.white : Colors.black,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -31,45 +33,60 @@ class NetbankingScreen extends StatelessWidget {
           children: [
             // Search
             TextField(
+              style: TextStyle(
+                fontFamily: 'Jost',
+                color: isDark ? Colors.white : Colors.black,
+              ),
               decoration: InputDecoration(
                 hintText: "Search by bank name",
-                hintStyle: const TextStyle(fontFamily: 'Jost'),
-                prefixIcon: const Icon(Icons.search, color: Colors.black),
-                border: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey.shade300),
+                hintStyle: TextStyle(
+                  fontFamily: 'Jost',
+                  color: isDark ? Colors.grey.shade400 : Colors.grey,
+                ),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: isDark ? Colors.white : Colors.black,
+                ),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
+                  ),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: isDark ? Colors.white : Colors.black,
+                  ),
                 ),
               ),
             ),
             const SizedBox(height: 24),
 
             // Popular Banks
-            _buildPopularBanksCard(),
+            _buildPopularBanksCard(isDark),
 
             const SizedBox(height: 24),
-            const Text(
+            Text(
               "All Banks",
               style: TextStyle(
                 fontFamily: 'Jost',
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
+                color: isDark ? Colors.white : Colors.black,
               ),
             ),
             const SizedBox(height: 16),
 
-            // List Bank (Dua Kolom)
-            _buildAllBanksList(),
+            _buildAllBanksList(isDark),
 
             const SizedBox(height: 40),
-            _buildReturnButton(context),
+            _buildReturnButton(context, isDark),
           ],
         ),
       ),
     );
   }
 
-  // ... (Widget helper _buildPopularBanksCard, _buildAllBanksList, _buildReturnButton sama seperti sebelumnya)
-  // Pastikan tetap menggunakan fontFamily 'Jost' dan kursor telunjuk pada tombol Return.
-  Widget _buildReturnButton(BuildContext context) {
+  Widget _buildReturnButton(BuildContext context, bool isDark) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
@@ -78,19 +95,27 @@ class NetbankingScreen extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 14),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.black, width: 1.5),
+            border: Border.all(
+              color: isDark ? Colors.white : Colors.black,
+              width: 1.5,
+            ),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: const Row(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.arrow_back, size: 18),
-              SizedBox(width: 8),
+              Icon(
+                Icons.arrow_back,
+                size: 18,
+                color: isDark ? Colors.white : Colors.black,
+              ),
+              const SizedBox(width: 8),
               Text(
                 "Return",
                 style: TextStyle(
                   fontFamily: 'Jost',
                   fontWeight: FontWeight.bold,
+                  color: isDark ? Colors.white : Colors.black,
                 ),
               ),
             ],
@@ -100,7 +125,7 @@ class NetbankingScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPopularBanksCard() {
+  Widget _buildPopularBanksCard(bool isDark) {
     final bankImages = [
       "assets/images/bank1.png",
       "assets/images/bank2.png",
@@ -115,35 +140,36 @@ class NetbankingScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? const Color(0xFF2A2D3A) : Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: isDark
+            ? []
+            : [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.08),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             "Popular Banks",
             style: TextStyle(
               fontFamily: 'Jost',
               fontWeight: FontWeight.w600,
               fontSize: 14,
+              color: isDark ? Colors.white : Colors.black,
             ),
           ),
-
           const SizedBox(height: 8),
 
-          // 🔥 GARIS PEMISAH
           Container(
             width: double.infinity,
             height: 1,
-            color: const Color(0xFFEAEAEA),
+            color: isDark ? Colors.grey.shade700 : const Color(0xFFEAEAEA),
           ),
 
           const SizedBox(height: 16),
@@ -153,8 +179,8 @@ class NetbankingScreen extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: bankImages.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4, // 4 kolom biar rapi
-              mainAxisSpacing: 12, // 🔥 jarak vertikal lebih rapat
+              crossAxisCount: 4,
+              mainAxisSpacing: 12,
               crossAxisSpacing: 12,
               childAspectRatio: 1,
             ),
@@ -162,7 +188,7 @@ class NetbankingScreen extends StatelessWidget {
               return Center(
                 child: Image.asset(
                   bankImages[index],
-                  width: 56, // ukuran logo
+                  width: 56,
                   height: 56,
                   fit: BoxFit.contain,
                 ),
@@ -174,7 +200,7 @@ class NetbankingScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAllBanksList() {
+  Widget _buildAllBanksList(bool isDark) {
     final banks = [
       "Bank of india",
       "Bank Of Maharasthra",
@@ -191,13 +217,13 @@ class NetbankingScreen extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(child: _buildBankColumn(banks.sublist(0, 5))),
-        Expanded(child: _buildBankColumn(banks.sublist(5))),
+        Expanded(child: _buildBankColumn(banks.sublist(0, 5), isDark)),
+        Expanded(child: _buildBankColumn(banks.sublist(5), isDark)),
       ],
     );
   }
 
-  Widget _buildBankColumn(List<String> list) {
+  Widget _buildBankColumn(List<String> list, bool isDark) {
     return Column(
       children: list
           .map(
@@ -205,12 +231,20 @@ class NetbankingScreen extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 12),
               child: Row(
                 children: [
-                  const Icon(Icons.arrow_forward, size: 14),
+                  Icon(
+                    Icons.arrow_forward,
+                    size: 14,
+                    color: isDark ? Colors.white : Colors.black,
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       name,
-                      style: const TextStyle(fontFamily: 'Jost', fontSize: 13),
+                      style: TextStyle(
+                        fontFamily: 'Jost',
+                        fontSize: 13,
+                        color: isDark ? Colors.white : Colors.black,
+                      ),
                     ),
                   ),
                 ],
