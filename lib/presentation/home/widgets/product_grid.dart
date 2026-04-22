@@ -3,7 +3,6 @@ import '../../product_detail/product_detail_page.dart';
 
 class ProductGrid extends StatefulWidget {
   const ProductGrid({super.key});
-
   @override
   State<ProductGrid> createState() => _ProductGridState();
 }
@@ -25,14 +24,14 @@ class _ProductGridState extends State<ProductGrid> {
       'discount': '' 
     },
     {
-      'name': 'Zen Dash Active Flex Shoes', // Nama diperbarui sesuai referensi
+      'name': 'Zen Dash Active Flex Shoes', 
       'price': '\$299', 
       'isFavorite': false,
       'image': 'assets/images/pic3.png',
       'discount': '' 
     },
     {
-      'name': 'Nova Stride Street Stompers', // Nama diperbarui sesuai referensi
+      'name': 'Nova Stride Street Stompers', 
       'price': '\$99', 
       'isFavorite': false,
       'image': 'assets/images/pic4.png',
@@ -64,8 +63,8 @@ class _ProductGridState extends State<ProductGrid> {
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2, 
         crossAxisSpacing: 16, 
-        mainAxisSpacing: 24, // Jarak antar baris diperbesar agar muat 2 baris teks
-        childAspectRatio: 0.58, // Rasio diubah agar kartu sedikit lebih tinggi
+        mainAxisSpacing: 24, 
+        childAspectRatio: 0.58, 
       ),
       itemCount: _products.length,
       itemBuilder: (context, index) {
@@ -87,7 +86,7 @@ class _ProductGridState extends State<ProductGrid> {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF5F5F5), // Background kartu disamakan dengan referensi
+                    color: Colors.white, // Kotak gambar tetap putih mutlak
                     borderRadius: BorderRadius.circular(16)
                   ),
                   child: Stack(
@@ -109,7 +108,6 @@ class _ProductGridState extends State<ProductGrid> {
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 12),
                             decoration: BoxDecoration(
-                              // Logika warna merah muda/krimson untuk produk tertentu sesuai referensi
                               color: product['name'].toString().contains('Nova') || product['discount'].toString().contains('20%')
                                   ? const Color(0xFFC70039) 
                                   : Colors.black,
@@ -148,40 +146,41 @@ class _ProductGridState extends State<ProductGrid> {
               ),
               const SizedBox(height: 12),
               
-              // --- PERBAIKAN TEKS JUDUL (Max 2 Baris) ---
-              Text(
-                product['name'], 
-                style: TextStyle(
-                  fontFamily: 'Jost', 
-                  fontWeight: FontWeight.w600, 
-                  fontSize: 14, 
-                  color: Theme.of(context).colorScheme.onSurface
-                ), 
-                maxLines: 2, // Memungkinkan teks turun ke baris kedua jika panjang
-                overflow: TextOverflow.ellipsis
+              // --- PERBAIKAN: Kunci tinggi teks agar harga di bawahnya sejajar ---
+              SizedBox(
+                height: 40, // Tinggi tetap (ideal untuk 2 baris teks)
+                child: Text(
+                  product['name'], 
+                  style: TextStyle(
+                    fontFamily: 'Jost', 
+                    fontWeight: FontWeight.w600, 
+                    fontSize: 14, 
+                    color: Theme.of(context).colorScheme.onSurface
+                  ), 
+                  maxLines: 2, 
+                  overflow: TextOverflow.ellipsis
+                ),
               ),
               const SizedBox(height: 8),
               
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // --- PERBAIKAN HARGA (Lebih Bold) ---
                   Text(
                     product['price'], 
                     style: TextStyle(
                       fontFamily: 'Jost',
                       fontWeight: FontWeight.bold, 
-                      fontSize: 18, // Diperbesar
+                      fontSize: 18, 
                       color: Theme.of(context).colorScheme.onSurface
                     )
                   ),
                   
-                  // --- PERBAIKAN KOTAK PANAH (Bukan Lingkaran) ---
                   Container(
-                    padding: const EdgeInsets.all(6), // Padding agar ikon lega
+                    padding: const EdgeInsets.all(6), 
                     decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF5F5F5), // Warna kotak panah
-                      borderRadius: BorderRadius.circular(8), // Menggunakan lengkungan kotak, BUKAN shape circle
+                      color: isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF5F5F5), 
+                      borderRadius: BorderRadius.circular(8), 
                     ),
                     child: Icon(
                       Icons.arrow_forward, 
