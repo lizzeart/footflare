@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// Pastikan path ini sesuai dengan struktur folder proyek Footflare kamu
 import 'package:footflare/presentation/order/my_order_screen.dart';
 import 'package:footflare/presentation/product_detail/product_detail_page.dart';
 
@@ -17,35 +16,43 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
   final Map<String, dynamic> productData = {
     "name": "Echo Vibe Urban Runners",
     "price": "\$179",
-    "image": "assets/images/pic1.png", 
+    "image": "assets/images/pic1.png",
   };
 
   @override
   Widget build(BuildContext context) {
+    // Mengecek apakah mode saat ini adalah Dark Mode
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      // Warna background scaffold
+      backgroundColor: isDark ? const Color(0xFF1E1F28) : Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: isDark ? const Color(0xFF1E1F28) : Colors.white,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
             decoration: BoxDecoration(
-              color: const Color(0xFFF7F7F7),
+              color: isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF7F7F7),
               borderRadius: BorderRadius.circular(10),
             ),
             child: IconButton(
-              icon: const Icon(Icons.arrow_back_ios_new, size: 18, color: Colors.black),
+              icon: Icon(
+                Icons.arrow_back_ios_new,
+                size: 18,
+                color: isDark ? Colors.white : Colors.black,
+              ),
               onPressed: () => Navigator.pop(context),
             ),
           ),
         ),
-        title: const Text(
+        title: Text(
           'Write Review',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: isDark ? Colors.white : Colors.black,
             fontFamily: 'Jost',
           ),
         ),
@@ -59,9 +66,13 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: isDark ? const Color(0xFF2A2D3A) : Colors.white,
                 borderRadius: BorderRadius.circular(15),
-                border: Border.all(color: const Color(0xFFEEEEEE)),
+                border: Border.all(
+                  color: isDark
+                      ? Colors.grey.shade800
+                      : const Color(0xFFEEEEEE),
+                ),
               ),
               child: Row(
                 children: [
@@ -69,7 +80,9 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
                     width: 90,
                     height: 90,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF7F7F7),
+                      color: isDark
+                          ? const Color(0xFF1E1F28)
+                          : const Color(0xFFF7F7F7),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Image.asset(
@@ -84,10 +97,11 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
                       children: [
                         Text(
                           productData['name'],
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                             fontFamily: 'Jost',
+                            color: isDark ? Colors.white : Colors.black,
                           ),
                         ),
                         const SizedBox(height: 5),
@@ -95,10 +109,11 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
                           children: [
                             Text(
                               productData['price'],
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
                                 fontFamily: 'Jost',
+                                color: isDark ? Colors.white : Colors.black,
                               ),
                             ),
                             const SizedBox(width: 10),
@@ -131,34 +146,44 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ProductDetailPage(product: productData),
+                          builder: (context) =>
+                              ProductDetailPage(product: productData),
                         ),
                       );
                     },
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF7F7F7),
+                        color: isDark
+                            ? const Color(0xFF1E1F28)
+                            : const Color(0xFFF7F7F7),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Icon(Icons.arrow_forward, size: 20),
+                      child: Icon(
+                        Icons.arrow_forward,
+                        size: 20,
+                        color: isDark ? Colors.white : Colors.black,
+                      ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
 
             const SizedBox(height: 30),
-            const Divider(color: Color(0xFFEEEEEE)),
+            Divider(
+              color: isDark ? Colors.grey.shade800 : const Color(0xFFEEEEEE),
+            ),
             const SizedBox(height: 20),
 
             // --- Rating Section ---
-            const Text(
+            Text(
               "Overall Rating",
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Jost',
+                color: isDark ? Colors.white : Colors.black,
               ),
             ),
             const SizedBox(height: 5),
@@ -191,15 +216,19 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
 
             const SizedBox(height: 30),
 
-            _buildInputLabel("Review Title"),
-            _buildTextField(hint: "Enter your review title"),
+            _buildInputLabel("Review Title", isDark),
+            _buildTextField(hint: "Enter your review title", isDark: isDark),
             const SizedBox(height: 20),
-            _buildInputLabel("Product Review"),
-            _buildTextField(hint: "Write your experience with this product", maxLines: 4),
+            _buildInputLabel("Product Review", isDark),
+            _buildTextField(
+              hint: "Write your experience with this product",
+              maxLines: 4,
+              isDark: isDark,
+            ),
 
             const SizedBox(height: 25),
 
-            const Align(
+            Align(
               alignment: Alignment.centerLeft,
               child: Text(
                 "Would you recommend this product to a friend?",
@@ -207,6 +236,7 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
                   fontFamily: 'Jost',
+                  color: isDark ? Colors.white : Colors.black,
                 ),
               ),
             ),
@@ -215,12 +245,12 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
               children: [
                 GestureDetector(
                   onTap: () => setState(() => _isRecommended = true),
-                  child: _buildRadioButton(_isRecommended, "Yes"),
+                  child: _buildRadioButton(_isRecommended, "Yes", isDark),
                 ),
                 const SizedBox(width: 30),
                 GestureDetector(
                   onTap: () => setState(() => _isRecommended = false),
-                  child: _buildRadioButton(!_isRecommended, "No"),
+                  child: _buildRadioButton(!_isRecommended, "No", isDark),
                 ),
               ],
             ),
@@ -233,21 +263,24 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
               height: 60,
               child: ElevatedButton(
                 onPressed: () {
-                  // PERBAIKAN DI SINI: Gunakan push biasa agar stack tidak hilang
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const MyOrderScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => const MyOrderScreen(),
+                    ),
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
+                  backgroundColor: isDark ? Colors.white : Colors.black,
                   elevation: 0,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
                 ),
-                child: const Text(
+                child: Text(
                   "Submit Review",
                   style: TextStyle(
-                    color: Colors.white,
+                    color: isDark ? Colors.black : Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Jost',
@@ -263,31 +296,37 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
   }
 
   // --- Helper Widgets ---
-  Widget _buildInputLabel(String label) {
+  Widget _buildInputLabel(String label, bool isDark) {
     return Align(
       alignment: Alignment.centerLeft,
       child: Padding(
         padding: const EdgeInsets.only(bottom: 8),
         child: Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 15,
             fontFamily: 'Jost',
+            color: isDark ? Colors.white : Colors.black,
           ),
         ),
       ),
     );
   }
 
-  Widget _buildTextField({required String hint, int maxLines = 1}) {
+  Widget _buildTextField({
+    required String hint,
+    int maxLines = 1,
+    required bool isDark,
+  }) {
     return TextField(
       maxLines: maxLines,
+      style: TextStyle(color: isDark ? Colors.white : Colors.black),
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: const TextStyle(color: Colors.grey, fontSize: 14),
         filled: true,
-        fillColor: const Color(0xFFF7F7F7),
+        fillColor: isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF7F7F7),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -297,7 +336,7 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
     );
   }
 
-  Widget _buildRadioButton(bool isSelected, String label) {
+  Widget _buildRadioButton(bool isSelected, String label, bool isDark) {
     return Row(
       children: [
         Container(
@@ -316,7 +355,9 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
               height: 10,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: isSelected ? const Color(0xFFE91E63) : Colors.transparent,
+                color: isSelected
+                    ? const Color(0xFFE91E63)
+                    : Colors.transparent,
               ),
             ),
           ),
@@ -324,9 +365,10 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
         const SizedBox(width: 10),
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 16,
             fontFamily: 'Jost',
+            color: isDark ? Colors.white : Colors.black,
           ),
         ),
       ],

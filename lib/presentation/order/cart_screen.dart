@@ -81,27 +81,27 @@ class _CartScreenState extends State<CartScreen> {
         elevation: 0,
         centerTitle: true,
         leadingWidth: 52,
+
+        // Cari bagian leading di AppBar, lalu ubah onPressed-nya:
         leading: MouseRegion(
           cursor: SystemMouseCursors.click,
           child: Container(
             margin: const EdgeInsets.only(left: 16, top: 10, bottom: 10),
             decoration: BoxDecoration(
-              // ✅ ini
               color: isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF3F3F3),
               borderRadius: BorderRadius.circular(10),
             ),
             child: IconButton(
               onPressed: () {
-                if (Navigator.canPop(context)) {
-                  Navigator.pop(context);
-                } else {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const MainScreen(initialIndex: 0),
-                    ),
-                  );
-                }
+                // Menggunakan pushAndRemoveUntil memastikan kita kembali ke Home
+                // dan menghapus semua tumpukan halaman sebelumnya (termasuk login)
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MainScreen(initialIndex: 0),
+                  ),
+                  (route) => false,
+                );
               },
               style: ButtonStyle(
                 overlayColor: WidgetStateProperty.all(Colors.transparent),
