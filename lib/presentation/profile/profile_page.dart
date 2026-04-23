@@ -34,7 +34,6 @@ class _FootFlareProfileState extends State<FootFlareProfile> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final textColor = isDark ? Colors.white : Colors.black;
     final scaffoldBg = Theme.of(context).scaffoldBackgroundColor;
-    final cardBg = isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF6F6F6);
 
     return Scaffold(
       backgroundColor: scaffoldBg,
@@ -46,15 +45,12 @@ class _FootFlareProfileState extends State<FootFlareProfile> {
           padding: const EdgeInsets.only(left: 15, top: 8, bottom: 8),
           child: GestureDetector(
             onTap: () {
-              if (Navigator.of(context).canPop()) {
-                Navigator.of(context).pop();
-              } else {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MainScreen()),
-                  (route) => false,
-                );
-              }
+              // PERBAIKAN: Langsung arahkan ke MainScreen dan hapus stack navigasi
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const MainScreen()),
+                (route) => false,
+              );
             },
             child: _buildSquareButton(
               context,
@@ -339,8 +335,7 @@ class _FootFlareProfileState extends State<FootFlareProfile> {
         ),
       ),
       trailing: Icon(Icons.arrow_forward_ios, size: 14, color: textColor),
-      onTap:
-          onTap ??
+      onTap: onTap ??
           () {
             if (isEditProfile) {
               Navigator.push(
@@ -372,7 +367,7 @@ class _FootFlareProfileState extends State<FootFlareProfile> {
   }
 }
 
-// --- Halaman Edit Profile (Support Dark Mode) ---
+// --- Halaman Edit Profile ---
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
 
@@ -417,9 +412,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             onTap: () => Navigator.pop(context),
             child: Container(
               decoration: BoxDecoration(
-                color: isDark
-                    ? const Color(0xFF2A2D3A)
-                    : const Color(0xFFF7F7F7),
+                color: isDark ? const Color(0xFF2A2D3A) : const Color(0xFFF7F7F7),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(Icons.arrow_back_ios_new, size: 18, color: textColor),
@@ -441,21 +434,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       children: [
                         CircleAvatar(
                           radius: 70,
-                          backgroundColor: isDark
-                              ? Colors.grey.shade800
-                              : Colors.grey.shade200,
+                          backgroundColor: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
                           backgroundImage: _imageFile != null
                               ? FileImage(_imageFile!)
-                              : const AssetImage('assets/images/wajahAmel.png')
-                                    as ImageProvider,
+                              : const AssetImage('assets/images/wajahAmel.png') as ImageProvider,
                         ),
                         GestureDetector(
                           onTap: _pickImage,
                           child: CircleAvatar(
                             radius: 18,
-                            backgroundColor: isDark
-                                ? Colors.white
-                                : Colors.black,
+                            backgroundColor: isDark ? Colors.white : Colors.black,
                             child: Icon(
                               Icons.camera_alt,
                               color: isDark ? Colors.black : Colors.white,
@@ -467,28 +455,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     ),
                   ),
                   const SizedBox(height: 40),
-                  _buildOutlineField(
-                    context,
-                    Icons.person_outline,
-                    "Full Name",
-                    "Amelia",
-                  ),
+                  _buildOutlineField(context, Icons.person_outline, "Full Name", "Amelia"),
                   const SizedBox(height: 15),
                   _buildOutlineField(context, Icons.mail_outline, "Email", ""),
                   const SizedBox(height: 15),
-                  _buildOutlineField(
-                    context,
-                    Icons.phone_outlined,
-                    "Phone Number",
-                    "",
-                  ),
+                  _buildOutlineField(context, Icons.phone_outlined, "Phone Number", ""),
                   const SizedBox(height: 15),
-                  _buildOutlineField(
-                    context,
-                    Icons.location_on_outlined,
-                    "Location",
-                    "",
-                  ),
+                  _buildOutlineField(context, Icons.location_on_outlined, "Location", ""),
                 ],
               ),
             ),
@@ -502,9 +475,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 onPressed: () => Navigator.pop(context),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: isDark ? Colors.white : Colors.black,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 child: Text(
                   "Update Profile",
@@ -522,21 +493,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget _buildOutlineField(
-    BuildContext context,
-    IconData icon,
-    String label,
-    String initialValue,
-  ) {
+  Widget _buildOutlineField(BuildContext context, IconData icon, String label, String initialValue) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final textColor = isDark ? Colors.white : Colors.black;
 
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
-        ),
+        border: Border.all(color: isDark ? Colors.grey.shade700 : Colors.grey.shade300),
       ),
       child: IntrinsicHeight(
         child: Row(
@@ -549,23 +513,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 15,
-                  vertical: 5,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                 child: TextFormField(
                   initialValue: initialValue,
-                  style: TextStyle(
-                    fontFamily: 'Jost',
-                    fontWeight: FontWeight.w600,
-                    color: textColor,
-                  ),
+                  style: TextStyle(fontFamily: 'Jost', fontWeight: FontWeight.w600, color: textColor),
                   decoration: InputDecoration(
                     labelText: label,
-                    labelStyle: const TextStyle(
-                      color: Colors.grey,
-                      fontSize: 12,
-                    ),
+                    labelStyle: const TextStyle(color: Colors.grey, fontSize: 12),
                     border: InputBorder.none,
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                   ),
