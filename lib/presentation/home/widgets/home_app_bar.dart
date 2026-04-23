@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../notification/notification_page.dart';
-import '../home_page.dart'; // Wajib di-import agar logo bisa kembali ke Home
+// PERUBAHAN 1: Import MainScreen, bukan HomePage
+import '../../main_screen.dart'; 
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
@@ -12,18 +13,16 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10), // Sedikit melebarkan area pinggir
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10), 
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // --- 1. ICON MENU KUSTOM (Hitbox Diperbesar) ---
+            // --- 1. ICON MENU KUSTOM ---
             GestureDetector(
-              // behavior: HitTestBehavior.opaque membuat seluruh area Container bisa diklik, 
-              // bukan hanya pas di warna hitamnya saja.
               behavior: HitTestBehavior.opaque, 
               onTap: () => Scaffold.of(context).openDrawer(),
               child: Container(
-                padding: const EdgeInsets.all(10), // Padding ini memperbesar "area sentuh" (hitbox) jari
+                padding: const EdgeInsets.all(10), 
                 child: SizedBox(
                   width: 24,
                   height: 24,
@@ -43,19 +42,20 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
             
-            // --- 2. LOGO APLIKASI BISA DIKLIK & DIPERBESAR ---
+            // --- 2. LOGO APLIKASI BISA DIKLIK ---
             GestureDetector(
               onTap: () {
-                // Menghapus semua tumpukan halaman sebelumnya dan mereset paksa ke Home
+                // PERUBAHAN 2: Arahkan ke MainScreen dengan initialIndex: 0 (Home)
+                // Ini akan mereset halaman dan memunculkan kembali Bottom Nav Bar
                 Navigator.pushAndRemoveUntil(
                   context, 
-                  MaterialPageRoute(builder: (_) => const HomePage()), 
+                  MaterialPageRoute(builder: (_) => const MainScreen(initialIndex: 0)), 
                   (route) => false
                 );
               },
               child: Image.asset(
                 isDark ? 'assets/images/logo-putih.png' : 'assets/images/logo-hitam.png',
-                height: 26, // Diperbesar dari sebelumnya 28 agar lebih ideal
+                height: 26, 
                 fit: BoxFit.contain,
               ),
             ),
