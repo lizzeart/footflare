@@ -50,13 +50,15 @@ class FootFlareApp extends StatelessWidget {
           // --- PENGATURAN MODE MALAM ---
           darkTheme: ThemeData(
             fontFamily: 'Jost',
-            scaffoldBackgroundColor: const Color(0xFF1B1D27),
+            scaffoldBackgroundColor: const Color(0xFF1B1D27), // Warna background utama
             colorScheme: const ColorScheme.dark(
               primary: Colors.white,
-              surface: Color(0xFF2A2D3A),
+              // UBAH BARIS INI: dari 0xFF2A2D3A menjadi 0xFF1B1D27
+              surface: Color(0xFF1B1D27), 
               onSurface: Colors.white,
             ),
             appBarTheme: const AppBarTheme(
+              // Pastikan AppBar juga menggunakan warna yang sama
               backgroundColor: Color(0xFF1B1D27),
               elevation: 0,
               iconTheme: IconThemeData(color: Colors.white),

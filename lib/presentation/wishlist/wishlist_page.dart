@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models/product_models.dart';
 import 'package:footflare/presentation/wishlist/widgets/wishlist_card.dart';
 import 'package:footflare/presentation/search/search_page.dart';
+import 'package:footflare/presentation/product_detail/product_detail_page.dart';
 
 // 1. UBAH IMPORT KE MAIN SCREEN
 import 'package:footflare/presentation/main_screen.dart'; 
@@ -94,7 +95,21 @@ class _WishlistPageState extends State<WishlistPage> {
                     discount: product.discount,
                     discountBg: product.discountColor ?? Colors.black,
                     onRemove: () => setState(() => product.isWishlist = false),
-                    onTap: () => debugPrint("Navigasi ke detail: ${product.name}"),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProductDetailPage(
+                            product: {
+                              'name': product.name,
+                              'image': product.image,
+                              'price': product.price.toString(),
+                              'discount': product.discount,
+                            },
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
               ),
